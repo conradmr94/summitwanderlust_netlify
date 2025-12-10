@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2 } from 'lucide-react';
+import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2, ScanLine, ShoppingCart, Moon } from 'lucide-react';
 
 const SummitWanderlustAdventure = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -11,8 +11,6 @@ const SummitWanderlustAdventure = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [videoError, setVideoError] = useState(false);
   const [revealedElements, setRevealedElements] = useState(new Set());
-  const [stickyNavScale, setStickyNavScale] = useState(1);
-  const [heroTextOffset, setHeroTextOffset] = useState(0);
   const parallaxRef = useRef(null);
   const videoRef = useRef(null);
   const observerRefs = useRef([]);
@@ -141,12 +139,6 @@ const SummitWanderlustAdventure = () => {
       const newChapter = Math.floor(scrolled / chapterHeight);
       setCurrentChapter(newChapter);
       
-      // Sticky nav scaling effect
-      setStickyNavScale(Math.max(0.8, 1 - scrolled * 0.0002));
-      
-      // Hero text parallax
-      setHeroTextOffset(scrolled * 0.3);
-      
       // Award XP for scrolling (once per chapter)
       if (newChapter !== currentChapter && newChapter > currentChapter) {
         addXP(10, 'Chapter explored');
@@ -271,16 +263,16 @@ const SummitWanderlustAdventure = () => {
 
   // Gallery images using your local images
   const galleryImages = [
-    { id: 1, url: "/01.jpg", title: "Mountain Vista", description: "The journey begins" },
-    { id: 2, url: "/02.JPG", title: "Breathe With Me", description: "Find your center" },
-    { id: 3, url: "/03.JPG", title: "Move With Me", description: "Train like a mountaineer" },
-    { id: 4, url: "/04.JPG", title: "Mountain Hideaway", description: "Your basecamp" },
-    { id: 5, url: "/05.JPG", title: "Nature's Symphony", description: "Immersive soundscapes" },
-    { id: 6, url: "/06.JPG", title: "Adventure Awaits", description: "Where will your path lead?" },
-    { id: 7, url: "/07.JPG", title: "Summit Views", description: "Peak experiences" },
-    { id: 8, url: "/08.JPG", title: "Trail Memories", description: "Captured moments" },
-    { id: 9, url: "/09.JPG", title: "Wilderness", description: "Untamed beauty" },
-    { id: 10, url: "/10.JPG", title: "The Journey", description: "Every step counts" }
+    { id: 1, url: "/01.jpg"},
+    { id: 2, url: "/02.JPG"},
+    { id: 3, url: "/03.JPG"},
+    { id: 4, url: "/04.JPG"},
+    { id: 5, url: "/05.JPG"},
+    { id: 6, url: "/06.JPG"},
+    { id: 7, url: "/07.JPG"},
+    { id: 8, url: "/08.JPG"},
+    { id: 9, url: "/09.JPG"},
+    { id: 10, url: "/10.JPG"}
   ];
 
   // Gallery navigation functions
@@ -569,9 +561,6 @@ const SummitWanderlustAdventure = () => {
               preload="auto"
               poster="/01.jpg"
               className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                transform: `translateY(${scrollY * 0.3}px) scale(${1 + scrollY * 0.0001})`,
-              }}
               onError={(e) => {
                 console.log('Video error:', e);
                 setVideoError(true);
@@ -592,7 +581,6 @@ const SummitWanderlustAdventure = () => {
               backgroundImage: "url('/01.jpg')",
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              transform: `translateY(${scrollY * 0.3}px) scale(${1 + scrollY * 0.0001})`,
               opacity: videoError ? 0.4 : 0,
               pointerEvents: 'none',
               zIndex: videoError ? 0 : -1,
@@ -600,20 +588,10 @@ const SummitWanderlustAdventure = () => {
           />
           
           {/* Overlay Layers */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-b from-stone-900/40 via-stone-900/30 to-stone-900/50"
-            style={{
-              transform: `translateY(${scrollY * 0.2}px)`,
-            }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-b from-stone-900/40 via-stone-900/30 to-stone-900/50" />
           
           {/* Fog Layer */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-t from-stone-900/50 via-transparent to-transparent"
-            style={{
-              transform: `translateY(${scrollY * 0.3}px)`,
-            }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-900/50 via-transparent to-transparent" />
         </div>
 
         {/* Floating Elements with Advanced Animation */}
@@ -621,7 +599,6 @@ const SummitWanderlustAdventure = () => {
           <div 
             className="absolute top-1/4 left-1/4"
             style={{
-              transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20 - scrollY * 0.2}px)`,
               animation: 'float 6s ease-in-out infinite'
             }}
           >
@@ -630,7 +607,6 @@ const SummitWanderlustAdventure = () => {
           <div 
             className="absolute top-3/4 right-1/3"
             style={{
-              transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * -15 - scrollY * 0.3}px)`,
               animation: 'float 8s ease-in-out infinite'
             }}
           >
@@ -639,7 +615,6 @@ const SummitWanderlustAdventure = () => {
           <div 
             className="absolute bottom-1/4 left-1/3"
             style={{
-              transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10 - scrollY * 0.4}px)`,
               animation: 'float 5s ease-in-out infinite'
             }}
           >
@@ -672,20 +647,13 @@ const SummitWanderlustAdventure = () => {
           );
         })()}
 
-        {/* Main Content with Advanced Parallax */}
-        <div 
-          className="relative z-10 text-center px-6 max-w-5xl"
-          style={{
-            transform: `translateY(${heroTextOffset}px)`,
-            opacity: Math.max(0, 1 - scrollY * 0.001)
-          }}
-        >
+        {/* Main Content */}
+        <div className="relative z-10 text-center px-6 max-w-5xl">
           {/* Animated Icon */}
           <div 
             className="mb-8 inline-block"
             style={{
-              animation: 'rotateIn 1s ease-out',
-              transform: `scale(${1 - scrollY * 0.0005})`
+              animation: 'rotateIn 1s ease-out'
             }}
           >
             <div className="bg-stone-900/80 backdrop-blur-sm rounded-full p-6 border border-stone-700/50 shadow-lg">
@@ -698,8 +666,7 @@ const SummitWanderlustAdventure = () => {
             <span 
               className="block text-white/90 font-light text-2xl md:text-3xl mb-4 tracking-widest"
               style={{
-                animation: 'slideInLeft 1s ease-out 0.2s both',
-                transform: `translateX(${scrollY * 0.1}px)`
+                animation: 'slideInLeft 1s ease-out 0.2s both'
               }}
             >
               SUMMIT
@@ -707,8 +674,7 @@ const SummitWanderlustAdventure = () => {
             <span 
               className="bg-gradient-to-r from-stone-300 via-white to-stone-200 bg-clip-text text-transparent"
               style={{
-                animation: 'slideInRight 1s ease-out 0.4s both',
-                transform: `translateX(${scrollY * -0.1}px)`
+                animation: 'slideInRight 1s ease-out 0.4s both'
               }}
             >
               WANDERLUST
@@ -737,12 +703,7 @@ const SummitWanderlustAdventure = () => {
           </div>
           
           {/* Scroll Indicator */}
-          <div 
-            className="mt-20"
-            style={{
-              opacity: Math.max(0, 1 - scrollY * 0.005)
-            }}
-          >
+          <div className="mt-20">
             <div className="animate-bounce">
               <ArrowDown className="w-8 h-8 text-white/50" />
             </div>
@@ -751,8 +712,21 @@ const SummitWanderlustAdventure = () => {
       </section>
 
       {/* Chapter 2: Apps - Tools for Adventure */}
-      <section id="chapter-1" className="min-h-screen relative py-20 px-6">
-        <div className="max-w-7xl mx-auto" style={{ transform: 'scale(0.9)', transformOrigin: 'top center' }}>
+      <section id="chapter-1" className="min-h-screen relative py-20 px-6 overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundImage: "url('/02.JPG')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.15
+          }}
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950 via-stone-900/95 to-stone-950" />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
           {/* Section Title with Reveal Animation */}
           <div 
             id="apps-title"
@@ -760,9 +734,6 @@ const SummitWanderlustAdventure = () => {
             className={`text-center mb-32 pt-12 reveal-fade ${
               revealedElements.has('apps-title') ? 'revealed' : ''
             }`}
-            style={{
-              transform: `translateY(${Math.max(0, 100 - (scrollY - 800) * 0.1)}px)`
-            }}
           >
             <h2 className="text-5xl md:text-7xl font-bold mb-6">
               <span className="text-white/70 font-light block text-xl md:text-2xl mb-4 tracking-widest">
@@ -776,21 +747,19 @@ const SummitWanderlustAdventure = () => {
           </div>
 
           {/* App Cards with 3D Effect and Reveal */}
-          <div className="grid md:grid-cols-2 gap-12 mt-8">
+          <div className="grid md:grid-cols-2 gap-12 mt-8 items-stretch">
             {/* Breathe With Me */}
             <div
               id="app-breathe"
               ref={el => observerRefs.current[1] = el}
-              className={`group relative reveal-slide-up stagger-delay-1 ${
+              className={`group relative reveal-slide-up stagger-delay-1 flex ${
                 revealedElements.has('app-breathe') ? 'revealed' : ''
               }`}
               style={{
-                transform: `perspective(1000px) rotateY(${mousePosition.x * 5}deg) rotateX(${-mousePosition.y * 5}deg)`,
-                transformStyle: 'preserve-3d',
                 transition: 'transform 0.2s ease-out'
               }}
             >
-              <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg">
+              <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                   <div className="absolute inset-0" style={{
@@ -814,43 +783,50 @@ const SummitWanderlustAdventure = () => {
                 </div>
                 
                 {/* Content */}
-                <div className="p-8 relative">
+                <div className="p-8 relative flex flex-col flex-grow">
                   <h3 className="text-3xl font-bold mb-4 text-white">Breathe With Me</h3>
                   <p className="text-white/80 mb-6 text-lg">
-                    Find your center in nature's rhythm. Guided breathing journeys inspired by mountain air and forest whispers.
+                    Your holistic wellness companion. Guided breathing exercises, walking tracking with breath integration, Pomodoro focus sessions, and sleep tracking—all enhanced with customizable background sounds including music, frequencies, color noises, and nature sounds.
                   </p>
                   
                   {/* Features */}
-                  <div className="space-y-3 mb-6">
-                    {['Alpine Breathing Exercises', 'Forest Meditation Walks', 'Mountain Peak Mindfulness'].map((feature) => (
-                      <div key={feature} className="flex items-center text-white/80">
-                        <Cloud className="w-5 h-5 mr-3 text-stone-300" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
+                  <div className="space-y-3 mb-6 flex-grow">
+                    {[
+                      { text: 'Guided Breathing Exercises', icon: Wind },
+                      { text: 'Walking & Step Tracking', icon: Footprints },
+                      { text: 'Pomodoro Focus Sessions', icon: Target },
+                      { text: 'Sleep Tracking', icon: Moon },
+                      { text: 'Custom Background Sounds', icon: Volume2 }
+                    ].map((feature) => {
+                      const Icon = feature.icon;
+                      return (
+                        <div key={feature.text} className="flex items-center text-white/80">
+                          <Icon className="w-5 h-5 mr-3 text-stone-300" />
+                          <span>{feature.text}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                   
-                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50">
-                    Explore the App
+                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto">
+                    Coming Soon!
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Move With Me */}
+            {/* NutriScan */}
             <div
               id="app-move"
               ref={el => observerRefs.current[2] = el}
-              className={`group relative reveal-slide-up stagger-delay-2 ${
+              className={`group relative reveal-slide-up stagger-delay-2 flex ${
                 revealedElements.has('app-move') ? 'revealed' : ''
               }`}
               style={{
-                transform: `perspective(1000px) rotateY(${mousePosition.x * -5}deg) rotateX(${-mousePosition.y * 5}deg)`,
-                transformStyle: 'preserve-3d',
                 transition: 'transform 0.2s ease-out'
               }}
             >
-              <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg">
+              <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                   <div className="absolute inset-0" style={{
@@ -862,36 +838,45 @@ const SummitWanderlustAdventure = () => {
                 <div className="h-64 relative overflow-hidden">
                   <img
                     src="/03.JPG"
-                    alt="Move With Me"
+                    alt="NutriScan"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-stone-800/30 to-transparent" />
                   
                   {/* Floating Icon */}
                   <div className="absolute top-6 right-6 bg-white/90 backdrop-blur p-4 rounded-2xl shadow-lg">
-                    <Mountain className="w-8 h-8 text-stone-700" />
+                    <ScanLine className="w-8 h-8 text-stone-700" />
                   </div>
                 </div>
                 
                 {/* Content */}
-                <div className="p-8 relative">
-                  <h3 className="text-3xl font-bold mb-4 text-white">Move With Me</h3>
+                <div className="p-8 relative flex flex-col flex-grow">
+                  <h3 className="text-3xl font-bold mb-4 text-white">NutriScan</h3>
                   <p className="text-white/80 mb-6 text-lg">
-                    Train like a mountaineer. Build strength and endurance with workouts inspired by trail adventures.
+                    Your all-inclusive nutrition companion. Scan barcodes and food with AI-powered machine learning to get instant nutrition data, create shopping lists, store items in your virtual refrigerator, and track comprehensive health data including menstrual cycles.
                   </p>
                   
                   {/* Features */}
-                  <div className="space-y-3 mb-6">
-                    {['Trail Running Programs', 'Summit Training Plans', 'Outdoor Yoga Sessions'].map((feature) => (
-                      <div key={feature} className="flex items-center text-white/80">
-                        <Footprints className="w-5 h-5 mr-3 text-stone-300" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
+                  <div className="space-y-3 mb-6 flex-grow">
+                    {[
+                      { text: 'Barcode & Food Scanning', icon: ScanLine },
+                      { text: 'ML-Powered Nutrition Data', icon: Zap },
+                      { text: 'Virtual Refrigerator & Recipes', icon: Grid },
+                      { text: 'Health & Cycle Tracking', icon: Heart },
+                      { text: 'Smart Shopping Lists', icon: ShoppingCart }
+                    ].map((feature) => {
+                      const Icon = feature.icon;
+                      return (
+                        <div key={feature.text} className="flex items-center text-white/80">
+                          <Icon className="w-5 h-5 mr-3 text-stone-300" />
+                          <span>{feature.text}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                   
-                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50">
-                    Start Training
+                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto">
+                    Coming Soon!
                   </button>
                 </div>
               </div>
@@ -926,28 +911,22 @@ const SummitWanderlustAdventure = () => {
       </section>
 
       {/* Chapter 3: Airbnb - Mountain Sanctuary */}
-      <section id="chapter-2" className="min-h-screen relative py-20">
-        {/* Parallax Background - Using your image */}
+      <section id="chapter-2" className="min-h-screen relative py-20 overflow-hidden">
+        {/* Background Image */}
         <div 
-          className="absolute inset-0"
+          className="absolute inset-0 -z-10"
           style={{
             backgroundImage: "url('/04.JPG')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-            transform: `translateY(${(scrollY - 1600) * 0.3}px)`,
+            backgroundRepeat: 'no-repeat',
             opacity: 0.2
           }}
         />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950 via-stone-900/95 to-stone-950" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-6" style={{ transform: 'scale(0.9)', transformOrigin: 'top center' }}>
-          <div 
-            className="text-center mb-20"
-            style={{
-              transform: `translateY(${(scrollY - 2000) * 0.1}px)`,
-              opacity: Math.max(0, Math.min(1, (scrollY - 1800) / 200))
-            }}
-          >
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <div className="text-center mb-20">
             <h2 className="text-5xl md:text-7xl font-bold mb-6">
               <span className="text-white/70 font-light block text-xl md:text-2xl mb-4 tracking-widest">
                 CHAPTER THREE
@@ -956,7 +935,7 @@ const SummitWanderlustAdventure = () => {
                 Mountain Hideaway
               </span>
             </h2>
-            <p className="text-xl text-white/80">Your basecamp in the Colorado wilderness</p>
+            <p className="text-xl text-white/80">Your basecamp in the High Sierras</p>
           </div>
 
           {/* Lodge Card */}
@@ -1007,7 +986,7 @@ const SummitWanderlustAdventure = () => {
                 <Home className="w-10 h-10 text-stone-300 mr-4" />
                 <div>
                   <h3 className="text-3xl font-bold text-white">Summit View Lodge</h3>
-                  <p className="text-stone-300">Evergreen, Colorado</p>
+                  <p className="text-stone-300">Sierra Nevada Mountains, California</p>
                 </div>
               </div>
               
@@ -1033,7 +1012,7 @@ const SummitWanderlustAdventure = () => {
               </div>
               
               <button className="w-full bg-gradient-to-r from-amber-700 to-green-800 py-4 rounded-xl font-medium text-white hover:shadow-lg hover:shadow-amber-700/30 transition-all duration-300">
-                Reserve Your Escape
+                Coming Soon!
               </button>
             </div>
           </div>
@@ -1066,15 +1045,22 @@ const SummitWanderlustAdventure = () => {
       </section>
 
       {/* Chapter 4: YouTube - Nature's Symphony */}
-      <section id="chapter-3" className="min-h-screen relative py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div 
-            className="text-center mb-20"
-            style={{
-              transform: `translateY(${(scrollY - 3200) * 0.1}px)`,
-              opacity: Math.max(0, Math.min(1, (scrollY - 3000) / 200))
-            }}
-          >
+      <section id="chapter-3" className="min-h-screen relative py-20 px-6 overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundImage: "url('/05.JPG')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.15
+          }}
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950 via-stone-900/95 to-stone-950" />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-20">
             <h2 className="text-5xl md:text-7xl font-bold mb-6">
               <span className="text-white/70 font-light block text-xl md:text-2xl mb-4 tracking-widest">
                 CHAPTER FOUR
@@ -1090,30 +1076,33 @@ const SummitWanderlustAdventure = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                title: "Dawn in the Redwoods",
-                duration: "3:42:00",
-                views: "892K",
-                thumbnail: "/05.JPG"
+                title: "Easy Listening | Susie Lake, CA",
+                duration: "2:21:01",
+                thumbnail: "https://img.youtube.com/vi/8bLDawl_ryg/maxresdefault.jpg",
+                youtubeUrl: "https://youtu.be/8bLDawl_ryg?si=vfS77Wui0O2Ngkbq",
+                videoId: "8bLDawl_ryg"
               },
               {
-                title: "Alpine Storm Approach",
-                duration: "2:18:00",
-                views: "567K",
-                thumbnail: "/06.JPG"
+                title: "Bossa Nova | Santa Catalina Island, CA",
+                duration: "2:35:16",
+                thumbnail: "https://img.youtube.com/vi/pVsMWFrhnTE/maxresdefault.jpg",
+                youtubeUrl: "https://youtu.be/pVsMWFrhnTE?si=DprVcul1kPo8rcxA",
+                videoId: "pVsMWFrhnTE"
               },
               {
-                title: "Cascade Falls Journey",
-                duration: "4:05:00",
-                views: "1.2M",
-                thumbnail: "/07.JPG"
+                title: "Study Lofi | Snowy Mountains",
+                duration: "2:03:35",
+                thumbnail: "https://img.youtube.com/vi/32QuotAMzfE/maxresdefault.jpg",
+                youtubeUrl: "https://youtu.be/32QuotAMzfE?si=bIShe7VkPgaG0GWf",
+                videoId: "32QuotAMzfE"
               }
             ].map((video, index) => (
-              <div
+              <a
                 key={index}
-                className="group relative cursor-pointer"
-                style={{
-                  transform: `translateY(${index % 2 === 0 ? (scrollY - 3200) * 0.05 : (scrollY - 3200) * 0.03}px)`,
-                }}
+                href={video.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative cursor-pointer block"
               >
                 <div className="relative rounded-2xl overflow-hidden bg-stone-900/80 backdrop-blur border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg">
                   {/* Thumbnail */}
@@ -1152,7 +1141,7 @@ const SummitWanderlustAdventure = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
 
@@ -1167,10 +1156,23 @@ const SummitWanderlustAdventure = () => {
       </section>
 
       {/* Chapter 5: Call to Adventure */}
-      <section id="chapter-4" className="min-h-screen relative flex items-center justify-center py-20">
-        {/* Map Background */}
+      <section id="chapter-4" className="min-h-screen relative flex items-center justify-center py-20 overflow-hidden">
+        {/* Background Image */}
         <div 
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundImage: "url('/06.JPG')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.15
+          }}
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950 via-stone-900/95 to-stone-950" />
+        
+        {/* Map Background Pattern */}
+        <div 
+          className="absolute inset-0 opacity-10 -z-9"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10,10 L30,5 L50,15 L70,8 L90,12 L95,30 L85,50 L90,70 L80,90 L60,85 L40,95 L20,85 L10,65 L5,45 L10,25 Z' stroke='%23b45309' stroke-width='0.5' fill='none'/%3E%3Cpath d='M30,30 L70,30 L70,70 L30,70 Z' stroke='%2316620e' stroke-width='0.3' fill='none' stroke-dasharray='2,2'/%3E%3C/svg%3E")`,
             backgroundSize: '200px 200px'
@@ -1178,11 +1180,10 @@ const SummitWanderlustAdventure = () => {
         />
         
         <div className="relative z-10 text-center px-6 max-w-4xl">
-          <div className="mb-8">
-            <Map className="w-20 h-20 text-stone-300 mx-auto animate-pulse" />
-          </div>
-          
           <h2 className="text-5xl md:text-7xl font-bold mb-8">
+          <span className="text-white/70 font-light block text-xl md:text-2xl mb-4 tracking-widest">
+                CHAPTER FIVE
+              </span>
             <span className="bg-gradient-to-r from-stone-300 via-white to-stone-200 bg-clip-text text-transparent">
               Your Adventure Awaits
             </span>
@@ -1218,8 +1219,21 @@ const SummitWanderlustAdventure = () => {
       </section>
 
       {/* Chapter 6: Adventure Gallery */}
-      <section id="chapter-5" className="min-h-screen relative py-20 px-6">
-        <div className="max-w-7xl mx-auto">
+      <section id="chapter-5" className="min-h-screen relative py-20 px-6 overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundImage: "url('/07.JPG')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.15
+          }}
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950 via-stone-900/95 to-stone-950" />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
           {/* Section Title with Reveal Animation */}
           <div 
             id="gallery-title"
@@ -1462,9 +1476,9 @@ const SummitWanderlustAdventure = () => {
                 Find Us
               </h4>
               <p className="text-white/80 font-mono text-sm">
-                39.6564° N, 105.3568° W<br />
-                Elevation: 8,465 ft<br />
-                Colorado, USA
+                39.0968° N, 120.0324° W<br />
+                Elevation: 6,225 ft<br />
+                Lake Tahoe, California
               </p>
             </div>
           </div>
