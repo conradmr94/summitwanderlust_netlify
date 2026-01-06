@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wind, ArrowLeft, Clock, Bell, BellOff, X, Mail, Send } from 'lucide-react';
+import { Wind, ArrowLeft, Clock, Bell, BellOff, X, Mail, Send, Shield } from 'lucide-react';
 
 const BreathWithMe = () => {
   const navigate = useNavigate();
@@ -530,6 +530,21 @@ const BreathWithMe = () => {
                 <span>Open Email to admin@summitwanderlust.com</span>
               </button>
             </form>
+            
+            {/* Privacy Policy Link */}
+            <div className="mt-6 pt-6 border-t border-stone-200">
+              <a
+                href="/privacy-policy"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/privacy-policy');
+                }}
+                className="text-sm text-stone-600 hover:text-blue-600 transition-colors inline-flex items-center gap-1"
+              >
+                <Shield className="w-4 h-4" />
+                <span>Privacy Policy</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2, ScanLine, ShoppingCart, Moon } from 'lucide-react';
 import BreathWithMe from './BreathWithMe';
+import PrivacyPolicy from './PrivacyPolicy';
 
 const SummitWanderlustAdventure = () => {
   const navigate = useNavigate();
@@ -1729,6 +1730,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<SummitWanderlustAdventure />} />
       <Route path="/breathe-with-me" element={<BreathWithMe />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
     </Routes>
   );
 };
