@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2, ScanLine, ShoppingCart, Moon, Calculator, UtensilsCrossed, Sparkles, ClipboardList, GraduationCap, Shield, Users } from 'lucide-react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2, ScanLine, ShoppingCart, Moon } from 'lucide-react';
+import BreathWithMe from './BreathWithMe';
 
 const SummitWanderlustAdventure = () => {
+  const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentChapter, setCurrentChapter] = useState(0);
@@ -821,8 +824,11 @@ const SummitWanderlustAdventure = () => {
                     })}
                   </div>
                   
-                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto">
-                    Coming Soon!
+                  <button 
+                    onClick={() => navigate('/breathe-with-me')}
+                    className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto"
+                  >
+                    Try It Now
                   </button>
                 </div>
               </div>
@@ -1718,5 +1724,13 @@ const SummitWanderlustAdventure = () => {
   );
 };
 
-const App = SummitWanderlustAdventure;
+const App = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<SummitWanderlustAdventure />} />
+      <Route path="/breathe-with-me" element={<BreathWithMe />} />
+    </Routes>
+  );
+};
+
 export default App;
