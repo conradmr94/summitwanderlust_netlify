@@ -1730,7 +1730,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<SummitWanderlustAdventure />} />
       <Route path="/breathe-with-me" element={<BreathWithMe />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/breathe-with-me/privacy-policy" element={<PrivacyPolicy />} />
     </Routes>
   );
 };

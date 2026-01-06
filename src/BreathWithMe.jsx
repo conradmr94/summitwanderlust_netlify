@@ -534,10 +534,10 @@ const BreathWithMe = () => {
             {/* Privacy Policy Link */}
             <div className="mt-6 pt-6 border-t border-stone-200">
               <a
-                href="/privacy-policy"
+                href="/breathe-with-me/privacy-policy"
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate('/privacy-policy');
+                  navigate('/breathe-with-me/privacy-policy');
                 }}
                 className="text-sm text-stone-600 hover:text-blue-600 transition-colors inline-flex items-center gap-1"
               >
