@@ -163,24 +163,27 @@ const SummitWanderlustAdventure = () => {
     
     // Intersection Observer for reveal animations and active section detection
     const observerOptions = {
-      threshold: [0, 0.5, 1],
-      rootMargin: '-50px'
+      threshold: [0, 0.1, 0.5, 1],
+      rootMargin: '-20px'
     };
 
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+        if (entry.isIntersecting) {
           setRevealedElements(prev => new Set(prev).add(entry.target.id));
         }
       });
     }, observerOptions);
 
-    // Observe all elements with reveal animations
-    observerRefs.current.forEach(ref => {
-      if (ref) revealObserver.observe(ref);
-    });
+    // Observe all elements with reveal animations - use setTimeout so refs are populated
+    const timeoutId = setTimeout(() => {
+      observerRefs.current.forEach(ref => {
+        if (ref) revealObserver.observe(ref);
+      });
+    }, 100);
 
     return () => {
+      clearTimeout(timeoutId);
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
