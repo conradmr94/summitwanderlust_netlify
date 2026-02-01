@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2, ScanLine, ShoppingCart, Moon } from 'lucide-react';
+import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2, ScanLine, ShoppingCart, Moon, Calculator, UtensilsCrossed, Sparkles, ClipboardList, GraduationCap, Shield, Users } from 'lucide-react';
 
 const SummitWanderlustAdventure = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -118,39 +118,43 @@ const SummitWanderlustAdventure = () => {
   };
   
   useEffect(() => {
-    // Initial loading animation
-    setTimeout(() => setIsLoading(false), 2000);
-    
-    // Unlock first achievement
-    setTimeout(() => unlockAchievement('first_steps'), 2500);
+    // Brief loading state (was 2s - reduced for snappier feel)
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    const achievementTimer = setTimeout(() => unlockAchievement('first_steps'), 1200);
+    return () => { clearTimeout(timer); clearTimeout(achievementTimer); };
   }, []);
 
   useEffect(() => {
+    let rafId = null;
+    let lastMouseUpdate = 0;
+    const MOUSE_THROTTLE = 50; // ms
+
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (scrolled / maxScroll) * 100;
-      
-      setScrollY(scrolled);
-      setScrollProgress(progress);
-      
-      // Update current chapter based on scroll
-      const chapterHeight = window.innerHeight * 2;
-      const newChapter = Math.floor(scrolled / chapterHeight);
-      setCurrentChapter(newChapter);
-      
-      // Award XP for scrolling (once per chapter)
-      if (newChapter !== currentChapter && newChapter > currentChapter) {
-        addXP(10, 'Chapter explored');
-      }
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const scrolled = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = maxScroll > 0 ? (scrolled / maxScroll) * 100 : 0;
+        const chapterHeight = window.innerHeight * 2;
+        const newChapter = Math.floor(scrolled / chapterHeight);
+
+        setScrollY(scrolled);
+        setScrollProgress(progress);
+        setCurrentChapter(prev => {
+          if (newChapter !== prev && newChapter > prev) addXP(10, 'Chapter explored');
+          return newChapter;
+        });
+      });
     };
 
     const handleMouseMove = (e) => {
-      requestAnimationFrame(() => {
-        setMousePosition({
-          x: (e.clientX / window.innerWidth - 0.5) * 2,
-          y: (e.clientY / window.innerHeight - 0.5) * 2
-        });
+      const now = Date.now();
+      if (now - lastMouseUpdate < MOUSE_THROTTLE) return;
+      lastMouseUpdate = now;
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 2,
+        y: (e.clientY / window.innerHeight - 0.5) * 2
       });
     };
 
@@ -159,7 +163,7 @@ const SummitWanderlustAdventure = () => {
     
     // Intersection Observer for reveal animations and active section detection
     const observerOptions = {
-      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+      threshold: [0, 0.5, 1],
       rootMargin: '-50px'
     };
 
@@ -177,16 +181,17 @@ const SummitWanderlustAdventure = () => {
     });
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
       revealObserver.disconnect();
     };
-  }, [currentChapter]);
+  }, []);
 
   // Section observer for sidebar navigation - separate effect to ensure DOM is ready
   useEffect(() => {
     const sectionObserverOptions = {
-      threshold: [0, 0.3, 0.5, 0.7, 1],
+      threshold: [0, 0.5, 1],
       rootMargin: '-20% 0px -20% 0px'
     };
 
@@ -558,7 +563,7 @@ const SummitWanderlustAdventure = () => {
               loop
               muted
               playsInline
-              preload="auto"
+              preload="metadata"
               poster="/01.jpg"
               className="absolute inset-0 w-full h-full object-cover"
               onError={(e) => {
@@ -748,7 +753,7 @@ const SummitWanderlustAdventure = () => {
 
           {/* App Cards with 3D Effect and Reveal */}
           <div className="grid md:grid-cols-2 gap-12 mt-8 items-stretch">
-            {/* Breathe With Me */}
+            {/* BreatheMindful */}
             <div
               id="app-breathe"
               ref={el => observerRefs.current[1] = el}
@@ -771,7 +776,8 @@ const SummitWanderlustAdventure = () => {
                 <div className="h-64 relative overflow-hidden">
                   <img
                     src="/02.JPG"
-                    alt="Breathe With Me"
+                    alt="BreatheMindful"
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-stone-800/30 to-transparent" />
@@ -784,7 +790,7 @@ const SummitWanderlustAdventure = () => {
                 
                 {/* Content */}
                 <div className="p-8 relative flex flex-col flex-grow">
-                  <h3 className="text-3xl font-bold mb-4 text-white">Breathe With Me</h3>
+                  <h3 className="text-3xl font-bold mb-4 text-white">BreatheMindful</h3>
                   <p className="text-white/80 mb-6 text-lg">
                     Your holistic wellness companion. Guided breathing exercises, walking tracking with breath integration, Pomodoro focus sessions, and sleep tracking—all enhanced with customizable background sounds including music, frequencies, color noises, and nature sounds.
                   </p>
@@ -815,7 +821,7 @@ const SummitWanderlustAdventure = () => {
               </div>
             </div>
 
-            {/* NutriScan */}
+            {/* Yammoing */}
             <div
               id="app-move"
               ref={el => observerRefs.current[2] = el}
@@ -838,7 +844,8 @@ const SummitWanderlustAdventure = () => {
                 <div className="h-64 relative overflow-hidden">
                   <img
                     src="/03.JPG"
-                    alt="NutriScan"
+                    alt="Yammoing"
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-stone-800/30 to-transparent" />
@@ -851,19 +858,25 @@ const SummitWanderlustAdventure = () => {
                 
                 {/* Content */}
                 <div className="p-8 relative flex flex-col flex-grow">
-                  <h3 className="text-3xl font-bold mb-4 text-white">NutriScan</h3>
+                  <h3 className="text-3xl font-bold mb-4 text-white">Yammoing</h3>
                   <p className="text-white/80 mb-6 text-lg">
-                    Your all-inclusive nutrition companion. Scan barcodes and food with AI-powered machine learning to get instant nutrition data, create shopping lists, store items in your virtual refrigerator, and track comprehensive health data including menstrual cycles.
+                    Your all-inclusive nutrition companion. Take photos and analyze food with AI, track calories, get personalized nutrition guidance, find diet-based restaurants, and discover meal ideas from your fridge and pantry—plus air quality checks for your environment.
                   </p>
                   
                   {/* Features */}
                   <div className="space-y-3 mb-6 flex-grow">
                     {[
-                      { text: 'Barcode & Food Scanning', icon: ScanLine },
-                      { text: 'ML-Powered Nutrition Data', icon: Zap },
-                      { text: 'Virtual Refrigerator & Recipes', icon: Grid },
-                      { text: 'Health & Cycle Tracking', icon: Heart },
-                      { text: 'Smart Shopping Lists', icon: ShoppingCart }
+                      { text: 'Take Photo & Analyze (AI)', icon: Camera },
+                      { text: 'AI Calorie Calculator', icon: Calculator },
+                      { text: 'Personal AI Nutritionist', icon: Heart },
+                      { text: 'AI Workout Coach', icon: Dumbbell },
+                      { text: 'AI Meal Prep & Recipe Finder', icon: UtensilsCrossed },
+                      { text: 'Diet-Based Restaurant Finder', icon: MapPin },
+                      { text: 'Smart Recommendations & Alternatives', icon: Sparkles },
+                      { text: 'Shopping Lists with Health Grading', icon: ShoppingCart },
+                      { text: 'Meal & Nutrition Tracking', icon: ClipboardList },
+                      { text: 'Fridge/Pantry & Cooking Suggestions', icon: Grid },
+                      { text: 'Air Quality Checks', icon: Cloud }
                     ].map((feature) => {
                       const Icon = feature.icon;
                       return (
@@ -875,7 +888,165 @@ const SummitWanderlustAdventure = () => {
                     })}
                   </div>
                   
+                  <a
+                    href="https://yammoing.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gradient-to-r from-amber-600 to-green-700 py-4 rounded-xl font-medium text-white hover:from-amber-500 hover:to-green-600 hover:shadow-lg transition-all duration-300 border border-amber-500/30 flex items-center justify-center"
+                  >
+                    Try Now!
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* College Connect */}
+            <div
+              id="app-college"
+              ref={el => observerRefs.current[3] = el}
+              className={`group relative reveal-slide-up stagger-delay-3 flex ${
+                revealedElements.has('app-college') ? 'revealed' : ''
+              }`}
+              style={{ transition: 'transform 0.2s ease-out' }}
+            >
+              <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b45309' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  }}/>
+                </div>
+                <div className="h-64 relative overflow-hidden">
+                  <img src="/08.JPG" alt="College Connect" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-stone-800/30 to-transparent" />
+                  <div className="absolute top-6 right-6 bg-stone-900/90 backdrop-blur p-4 rounded-2xl shadow-lg border border-stone-700/50">
+                    <GraduationCap className="w-8 h-8 text-stone-300" />
+                  </div>
+                </div>
+                <div className="p-8 relative flex flex-col flex-grow">
+                  <h3 className="text-3xl font-bold mb-4 text-white">College Connect</h3>
+                  <p className="text-white/80 mb-6 text-lg">
+                    Your campus companion. Connect with fellow students, discover campus resources, stay on top of deadlines, and navigate college life together.
+                  </p>
+                  <div className="space-y-3 mb-6 flex-grow">
+                    {[
+                      { text: 'Student Community & Networking', icon: Users },
+                      { text: 'Campus Resources & Events', icon: MapPin },
+                      { text: 'Assignment & Deadline Tracking', icon: Target },
+                      { text: 'Study Groups & Collaboration', icon: Grid },
+                      { text: 'Campus Navigation', icon: Navigation }
+                    ].map((feature) => {
+                      const Icon = feature.icon;
+                      return (
+                        <div key={feature.text} className="flex items-center text-white/80">
+                          <Icon className="w-5 h-5 mr-3 text-stone-300" />
+                          <span>{feature.text}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                   <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto">
+                    Coming Soon!
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Security App for App Deployment */}
+            <div
+              id="app-security"
+              ref={el => observerRefs.current[4] = el}
+              className={`group relative reveal-slide-up stagger-delay-4 flex ${
+                revealedElements.has('app-security') ? 'revealed' : ''
+              }`}
+              style={{ transition: 'transform 0.2s ease-out' }}
+            >
+              <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b45309' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  }}/>
+                </div>
+                <div className="h-64 relative overflow-hidden">
+                  <img src="/09.JPG" alt="Security for App Deployment" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-stone-800/30 to-transparent" />
+                  <div className="absolute top-6 right-6 bg-stone-900/90 backdrop-blur p-4 rounded-2xl shadow-lg border border-stone-700/50">
+                    <Shield className="w-8 h-8 text-stone-300" />
+                  </div>
+                </div>
+                <div className="p-8 relative flex flex-col flex-grow">
+                  <h3 className="text-3xl font-bold mb-4 text-white">Security for App Deployment</h3>
+                  <p className="text-white/80 mb-6 text-lg">
+                    Secure your deployment pipeline. Protect your apps with robust security checks, access controls, and safe deployment workflows from build to production.
+                  </p>
+                  <div className="space-y-3 mb-6 flex-grow">
+                    {[
+                      { text: 'Secure CI/CD Pipeline', icon: Zap },
+                      { text: 'Access Controls & Permissions', icon: Lock },
+                      { text: 'Deployment Audit Logging', icon: Target },
+                      { text: 'Environment Security Checks', icon: Shield },
+                      { text: 'Secrets & Credential Management', icon: Unlock }
+                    ].map((feature) => {
+                      const Icon = feature.icon;
+                      return (
+                        <div key={feature.text} className="flex items-center text-white/80">
+                          <Icon className="w-5 h-5 mr-3 text-stone-300" />
+                          <span>{feature.text}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto">
+                    Coming Soon!
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Lovocado */}
+            <div
+              id="app-lovocado"
+              ref={el => observerRefs.current[5] = el}
+              className={`group relative reveal-slide-up stagger-delay-5 flex md:col-span-2 ${
+                revealedElements.has('app-lovocado') ? 'revealed' : ''
+              }`}
+              style={{ transition: 'transform 0.2s ease-out' }}
+            >
+              <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b45309' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  }}/>
+                </div>
+                <div className="h-64 relative overflow-hidden">
+                  <img src="/10.JPG" alt="Lovocado" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-stone-800/30 to-transparent" />
+                  <div className="absolute top-6 right-6 bg-stone-900/90 backdrop-blur p-4 rounded-2xl shadow-lg border border-stone-700/50">
+                    <Heart className="w-8 h-8 text-stone-300" />
+                  </div>
+                </div>
+                <div className="p-8 relative flex flex-col flex-grow">
+                  <h3 className="text-3xl font-bold mb-4 text-white">Lovocado</h3>
+                  <p className="text-white/80 mb-6 text-lg">
+                    The couple app for connection. Share moments, plan dates, sync schedules, and grow together with shared goals, reminders, and a space that&apos;s just for the two of you.
+                  </p>
+                  <div className="space-y-3 mb-6 flex-grow">
+                    {[
+                      { text: 'Shared Calendar & Schedules', icon: Grid },
+                      { text: 'Date Ideas & Bucket List', icon: Heart },
+                      { text: 'Private Moments & Memories', icon: Camera },
+                      { text: 'Relationship Goals & Milestones', icon: Target },
+                      { text: 'Reminders & Celebrations', icon: Star }
+                    ].map((feature) => {
+                      const Icon = feature.icon;
+                      return (
+                        <div key={feature.text} className="flex items-center text-white/80">
+                          <Icon className="w-5 h-5 mr-3 text-stone-300" />
+                          <span>{feature.text}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto max-w-xs">
                     Coming Soon!
                   </button>
                 </div>
@@ -947,6 +1118,7 @@ const SummitWanderlustAdventure = () => {
                   <img
                     src="/05.JPG"
                     alt="Mountain View"
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 to-transparent" />
@@ -955,6 +1127,7 @@ const SummitWanderlustAdventure = () => {
                   <img
                     src="/06.JPG"
                     alt="Cabin Interior"
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 to-transparent" />
@@ -965,6 +1138,7 @@ const SummitWanderlustAdventure = () => {
                   <img
                     src="/07.JPG"
                     alt="Hot Tub"
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 to-transparent" />
@@ -973,6 +1147,7 @@ const SummitWanderlustAdventure = () => {
                   <img
                     src="/04.JPG"
                     alt="Forest Trail"
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 to-transparent" />
@@ -1110,6 +1285,7 @@ const SummitWanderlustAdventure = () => {
                     <img
                       src={video.thumbnail}
                       alt={video.title}
+                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent" />
@@ -1284,6 +1460,7 @@ const SummitWanderlustAdventure = () => {
                       <img
                         src={image.url}
                         alt={image.title}
+                        loading="lazy"
                         className="w-full h-full object-cover"
                         draggable={false}
                       />
@@ -1351,6 +1528,7 @@ const SummitWanderlustAdventure = () => {
                     <img
                       src={image.url}
                       alt={image.title}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -1382,6 +1560,7 @@ const SummitWanderlustAdventure = () => {
                   <img
                     src={image.url}
                     alt={image.title}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
