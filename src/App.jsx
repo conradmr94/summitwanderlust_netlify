@@ -735,13 +735,11 @@ const SummitWanderlustAdventure = () => {
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950 via-stone-900/95 to-stone-950" />
         
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* Section Title with Reveal Animation */}
+          {/* Section Title - always visible */}
           <div 
             id="apps-title"
             ref={el => observerRefs.current[0] = el}
-            className={`text-center mb-32 pt-12 reveal-fade ${
-              revealedElements.has('apps-title') ? 'revealed' : ''
-            }`}
+            className="text-center mb-32 pt-12"
           >
             <h2 className="text-5xl md:text-7xl font-bold mb-6">
               <span className="text-white/70 font-light block text-xl md:text-2xl mb-4 tracking-widest">
@@ -760,12 +758,8 @@ const SummitWanderlustAdventure = () => {
             <div
               id="app-breathe"
               ref={el => observerRefs.current[1] = el}
-              className={`group relative reveal-slide-up stagger-delay-1 flex ${
-                revealedElements.has('app-breathe') ? 'revealed' : ''
-              }`}
-              style={{
-                transition: 'transform 0.2s ease-out'
-              }}
+              className="group relative flex"
+              style={{ transition: 'transform 0.2s ease-out' }}
             >
               <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
                 {/* Background Pattern */}
@@ -828,12 +822,8 @@ const SummitWanderlustAdventure = () => {
             <div
               id="app-move"
               ref={el => observerRefs.current[2] = el}
-              className={`group relative reveal-slide-up stagger-delay-2 flex ${
-                revealedElements.has('app-move') ? 'revealed' : ''
-              }`}
-              style={{
-                transition: 'transform 0.2s ease-out'
-              }}
+              className="group relative flex"
+              style={{ transition: 'transform 0.2s ease-out' }}
             >
               <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
                 {/* Background Pattern */}
@@ -907,9 +897,7 @@ const SummitWanderlustAdventure = () => {
             <div
               id="app-college"
               ref={el => observerRefs.current[3] = el}
-              className={`group relative reveal-slide-up stagger-delay-3 flex ${
-                revealedElements.has('app-college') ? 'revealed' : ''
-              }`}
+              className="group relative flex"
               style={{ transition: 'transform 0.2s ease-out' }}
             >
               <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
@@ -958,9 +946,7 @@ const SummitWanderlustAdventure = () => {
             <div
               id="app-security"
               ref={el => observerRefs.current[4] = el}
-              className={`group relative reveal-slide-up stagger-delay-4 flex ${
-                revealedElements.has('app-security') ? 'revealed' : ''
-              }`}
+              className="group relative flex"
               style={{ transition: 'transform 0.2s ease-out' }}
             >
               <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
@@ -1009,9 +995,7 @@ const SummitWanderlustAdventure = () => {
             <div
               id="app-lovocado"
               ref={el => observerRefs.current[5] = el}
-              className={`group relative reveal-slide-up stagger-delay-5 flex md:col-span-2 ${
-                revealedElements.has('app-lovocado') ? 'revealed' : ''
-              }`}
+              className="group relative flex md:col-span-2"
               style={{ transition: 'transform 0.2s ease-out' }}
             >
               <div className="relative bg-stone-900/80 backdrop-blur-lg rounded-3xl overflow-hidden border border-stone-700/50 hover:border-stone-600 transition-all duration-500 shadow-lg flex flex-col w-full">
