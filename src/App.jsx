@@ -119,7 +119,17 @@ const SummitWanderlustAdventure = () => {
   
   useEffect(() => {
     // Brief loading state (was 2s - reduced for snappier feel)
-    const timer = setTimeout(() => setIsLoading(false), 500);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      // Scroll to hash after content renders (e.g. #chapter-1 for direct links)
+      requestAnimationFrame(() => {
+        const hash = window.location.hash;
+        if (hash) {
+          const el = document.getElementById(hash.slice(1));
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }, 500);
     const achievementTimer = setTimeout(() => unlockAchievement('first_steps'), 1200);
     return () => { clearTimeout(timer); clearTimeout(achievementTimer); };
   }, []);
@@ -720,7 +730,7 @@ const SummitWanderlustAdventure = () => {
       </section>
 
       {/* Chapter 2: Apps - Tools for Adventure */}
-      <section id="chapter-1" className="min-h-screen relative py-20 px-6 overflow-hidden">
+      <section id="chapter-1" className="min-h-screen relative py-20 px-6">
         {/* Background Image */}
         <div 
           className="absolute inset-0 -z-10"
