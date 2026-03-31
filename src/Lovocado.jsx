@@ -230,6 +230,17 @@ const Lovocado = () => {
             <p className="text-stone-400 text-sm">Available soon on iOS</p>
           </div>
         </div>
+
+        {/* Privacy Policy link */}
+        <div className="mt-16 text-center">
+          <a
+            href="/lovocado/privacy-policy"
+            onClick={(e) => { e.preventDefault(); navigate('/lovocado/privacy-policy'); }}
+            className="text-sm text-stone-400 hover:text-pink-500 transition-colors duration-200 underline underline-offset-4 decoration-stone-300 hover:decoration-pink-400"
+          >
+            Privacy Policy
+          </a>
+        </div>
       </main>
     </div>
   );

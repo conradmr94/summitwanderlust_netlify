@@ -4,6 +4,7 @@ import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camer
 import BreathWithMe from './BreathWithMe';
 import PrivacyPolicy from './PrivacyPolicy';
 import Lovocado from './Lovocado';
+import LovocadoPrivacyPolicy from './LovocadoPrivacyPolicy';
 
 const SummitWanderlustAdventure = () => {
   const navigate = useNavigate();
@@ -1737,6 +1738,7 @@ const App = () => {
       <Route path="/breathe-with-me" element={<BreathWithMe />} />
       <Route path="/breathe-with-me/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/lovocado" element={<Lovocado />} />
+      <Route path="/lovocado/privacy-policy" element={<LovocadoPrivacyPolicy />} />
     </Routes>
   );
 };
