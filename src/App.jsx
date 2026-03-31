@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Compass, Map, TreePine, Mountain, Tent, Wind, Footprints, MapPin, Camera, Backpack, Navigation, Sun, Cloud, Star, ArrowDown, Menu, X, Play, Home, Volume2, Dumbbell, Trophy, Award, Zap, Target, Lock, Unlock, TrendingUp, ChevronLeft, ChevronRight, CircleDot, Grid, Layers, Image as ImageIcon, ZoomIn, Heart, Share2, Download, Maximize2, ScanLine, ShoppingCart, Moon, Calculator, UtensilsCrossed, Sparkles, ClipboardList, GraduationCap, Shield, Users } from 'lucide-react';
 import BreathWithMe from './BreathWithMe';
 import PrivacyPolicy from './PrivacyPolicy';
+import Lovocado from './Lovocado';
 
 const SummitWanderlustAdventure = () => {
   const navigate = useNavigate();
@@ -1050,9 +1051,13 @@ const SummitWanderlustAdventure = () => {
                       );
                     })}
                   </div>
-                  <button className="w-full bg-stone-800 py-4 rounded-xl font-medium text-white hover:bg-stone-700 hover:shadow-lg transition-all duration-300 border border-stone-600/50 mt-auto max-w-xs">
-                    Coming Soon!
-                  </button>
+                  <a
+                    href="/lovocado"
+                    onClick={(e) => { e.preventDefault(); navigate('/lovocado'); }}
+                    className="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-4 rounded-xl font-medium text-white hover:from-pink-400 hover:to-rose-400 hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300 border border-pink-400/30 mt-auto max-w-xs flex items-center justify-center"
+                  >
+                    Try it now!
+                  </a>
                 </div>
               </div>
             </div>
@@ -1731,6 +1736,7 @@ const App = () => {
       <Route path="/" element={<SummitWanderlustAdventure />} />
       <Route path="/breathe-with-me" element={<BreathWithMe />} />
       <Route path="/breathe-with-me/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/lovocado" element={<Lovocado />} />
     </Routes>
   );
 };
