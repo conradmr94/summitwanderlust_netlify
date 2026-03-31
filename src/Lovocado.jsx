@@ -68,6 +68,7 @@ const Lovocado = () => {
   const cardRefs = useRef([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setHeroVisible(true);
   }, []);
 
