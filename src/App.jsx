@@ -5,6 +5,8 @@ import BreathWithMe from './BreathWithMe';
 import PrivacyPolicy from './PrivacyPolicy';
 import Lovocado from './Lovocado';
 import LovocadoPrivacyPolicy from './LovocadoPrivacyPolicy';
+import Motive from './Motive';
+import MotivePrivacyPolicy from './MotivePrivacyPolicy';
 
 const SummitWanderlustAdventure = () => {
   const navigate = useNavigate();
@@ -1739,6 +1741,8 @@ const App = () => {
       <Route path="/breathe-with-me/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/lovocado" element={<Lovocado />} />
       <Route path="/lovocado/privacy-policy" element={<LovocadoPrivacyPolicy />} />
+      <Route path="/motive" element={<Motive />} />
+      <Route path="/motive/privacy-policy" element={<MotivePrivacyPolicy />} />
     </Routes>
   );
 };
