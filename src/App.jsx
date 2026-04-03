@@ -420,58 +420,95 @@ const SummitWanderlustAdventure = () => {
     ctx.setLineDash([]);
 
     // ── 14. CAMP LANDMARKS ──
-    // lovocado (67,111) — pink orchard cottage
-    ctx.fillStyle='#b05050'; ctx.fillRect(65,101,2,3); // chimney
-    ctx.fillStyle='#c84878'; ctx.fillRect(61,103,12,2); // roof peak
-    ctx.fillStyle='#e06090'; ctx.fillRect(62,105,10,2); // roof slope
-    ctx.fillStyle='#f5e8c0'; ctx.fillRect(63,107,9,5); // walls
-    ctx.fillStyle='#a0602a'; ctx.fillRect(66,110,3,2); // door
-    ctx.fillStyle='#88ccff'; ctx.fillRect(63,108,2,2); ctx.fillRect(69,108,2,2); // windows
-    ctx.fillStyle='#2ea030'; ctx.fillRect(56,107,4,4); ctx.fillRect(57,105,2,3); // left orchard tree
-    ctx.fillStyle='#c84878'; ctx.fillRect(58,107,1,1); ctx.fillRect(57,106,1,1); // fruit left
-    ctx.fillStyle='#2ea030'; ctx.fillRect(74,107,4,4); ctx.fillRect(75,105,2,3); // right orchard tree
-    ctx.fillStyle='#c84878'; ctx.fillRect(75,107,1,1); ctx.fillRect(76,106,1,1); // fruit right
+    // Helper: scale landmark ~18% smaller around its center
+    const lm = (cx, cy, fn) => {
+      ctx.save(); ctx.translate(cx,cy); ctx.scale(0.82,0.82); ctx.translate(-cx,-cy); fn(); ctx.restore();
+    };
 
-    // breathe (48,75) — torii meditation gate
-    ctx.fillStyle='#d04020';
-    ctx.fillRect(40,66,16,2); ctx.fillRect(41,64,14,2); // crossbeams
-    ctx.fillRect(40,68,2,8); ctx.fillRect(54,68,2,8); // pillars
-    ctx.fillStyle='rgba(255,255,255,0.65)';
-    ctx.fillRect(47,67,1,4); ctx.fillRect(49,68,1,3); // wind ribbons
+    // Mini-environments (ground layer, drawn before buildings)
+    // lovocado: warm meadow patch, flower cluster, door path
+    ctx.fillStyle='rgba(88,196,28,0.32)'; ctx.beginPath(); ctx.ellipse(67,112,14,5,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#ff88bb'; ctx.fillRect(52,112,2,2); ctx.fillRect(57,111,2,2); ctx.fillRect(62,113,2,2);
+    ctx.fillStyle='#ffcc44'; ctx.fillRect(55,112,2,2); ctx.fillRect(60,112,2,2);
+    ctx.fillStyle='#9a9080'; ctx.fillRect(67,111,2,2); ctx.fillRect(69,110,2,2);
+    // breathe: reeds at bank, stepping stones, deeper water
+    ctx.fillStyle='#4a9030'; ctx.fillRect(34,72,1,5); ctx.fillRect(36,71,1,6); ctx.fillRect(38,72,1,5);
+    ctx.fillStyle='#3a7028'; ctx.fillRect(33,73,1,4); ctx.fillRect(37,70,1,5);
+    ctx.fillStyle='#8898a0'; ctx.fillRect(35,76,3,2); ctx.fillRect(40,76,3,2); ctx.fillRect(44,76,3,2);
+    ctx.fillStyle='#0a5888'; ctx.fillRect(25,79,5,3); ctx.fillRect(22,81,4,3);
+    // yammoing: stacked crates, herb tufts, warm path stones
+    ctx.fillStyle='#b08040'; ctx.fillRect(78,43,5,4); ctx.fillRect(80,41,4,3);
+    ctx.fillStyle='#c89050'; ctx.fillRect(78,43,5,1); ctx.fillRect(80,41,4,1);
+    ctx.fillStyle='#60a020'; ctx.fillRect(82,46,2,3); ctx.fillRect(85,45,2,4); ctx.fillRect(84,47,2,3);
+    ctx.fillStyle='#aa9880'; ctx.fillRect(97,47,2,2); ctx.fillRect(101,47,2,2); ctx.fillRect(105,47,2,2);
+    // sss: purple ground shadow, rocky ridge, accent grass
+    ctx.fillStyle='rgba(40,10,70,0.42)'; ctx.beginPath(); ctx.ellipse(144,25,14,5,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#5a5a7a'; ctx.fillRect(130,22,5,3); ctx.fillRect(135,21,4,2); ctx.fillRect(153,22,5,3); ctx.fillRect(158,21,4,2);
+    ctx.fillStyle='#3a1a5e'; ctx.fillRect(131,25,3,2); ctx.fillRect(154,25,3,2);
+    ctx.fillStyle='#5a2080'; ctx.fillRect(136,24,2,2); ctx.fillRect(139,23,1,2); ctx.fillRect(150,24,2,2); ctx.fillRect(153,23,1,2);
+    // deva: dark stone shadow, stone tiles, sharp grass
+    ctx.fillStyle='rgba(20,30,40,0.52)'; ctx.beginPath(); ctx.ellipse(187,48,18,6,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#4a5060'; ctx.fillRect(172,44,3,2); ctx.fillRect(176,45,3,2); ctx.fillRect(200,44,3,2); ctx.fillRect(204,45,3,2);
+    ctx.fillStyle='#1e2a18'; ctx.fillRect(173,47,2,2); ctx.fillRect(178,46,2,2); ctx.fillRect(201,47,2,2);
+    // igottyou: dusty ground ring, campfire glow, worn path
+    ctx.fillStyle='rgba(150,95,25,0.3)'; ctx.beginPath(); ctx.ellipse(158,89,20,6,0,0,PI2); ctx.fill();
+    ctx.fillStyle='rgba(255,110,20,0.16)'; ctx.beginPath(); ctx.ellipse(168,86,9,4,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#7a6040'; ctx.fillRect(144,89,4,2); ctx.fillRect(148,88,3,2); ctx.fillRect(151,87,3,2);
 
-    // yammoing (96,45) — market kiosk
-    ctx.fillStyle='#28b054'; ctx.fillRect(86,37,20,2); // awning base
-    ctx.fillStyle='#1a8040';
-    ctx.fillRect(87,35,2,2); ctx.fillRect(91,35,2,2); ctx.fillRect(95,35,2,2); ctx.fillRect(99,35,2,2); ctx.fillRect(103,35,2,2); // fringe
-    ctx.fillStyle='#c8943c'; ctx.fillRect(87,39,18,3); // counter top
-    ctx.fillStyle='#a07030'; ctx.fillRect(87,42,18,3); // counter base
-    ctx.fillStyle='#784618'; ctx.fillRect(87,37,1,7); ctx.fillRect(104,37,1,7); // posts
-
-    // sss (144,24) — observatory tower
-    ctx.fillStyle='#8898b4'; ctx.fillRect(140,15,9,10); // tower body
-    ctx.fillStyle='#aabcd0'; ctx.fillRect(140,15,2,10); // highlight edge
-    ctx.fillStyle='#8898b4'; ctx.fillRect(140,13,2,2); ctx.fillRect(144,13,2,2); ctx.fillRect(148,13,2,2); // battlements
-    ctx.fillStyle='#c0d4e8'; ctx.fillRect(141,10,7,4); ctx.fillRect(142,9,5,1); // dome
-    ctx.fillStyle='#e8f4ff'; ctx.fillRect(143,10,3,2); // dome glass
-    ctx.fillStyle='#ffe080'; ctx.fillRect(141,18,2,2); ctx.fillRect(146,18,2,2); // lit windows
-    ctx.fillStyle='#2a1810'; ctx.fillRect(143,22,2,3); // door
-
-    // deva (187,45) — fortress watchtower
-    ctx.fillStyle='#5a7090'; ctx.fillRect(183,33,10,13); // tower body
-    ctx.fillStyle='#4a6080'; ctx.fillRect(183,33,2,13); // shadow side
-    ctx.fillStyle='#5a7090'; ctx.fillRect(181,31,3,2); ctx.fillRect(186,31,3,2); ctx.fillRect(191,31,2,2); // battlements
-    ctx.fillStyle='#ffe080'; ctx.fillRect(185,38,2,3); ctx.fillRect(189,38,2,3); // lit windows
-    ctx.fillStyle='#ff6020'; ctx.fillRect(185,37,2,1); ctx.fillRect(189,37,2,1); // torch flames
-    ctx.fillStyle='#2a1810'; ctx.fillRect(186,42,4,5); // door arch
-
-    // igottyou (158,87) — signal tower + campfire
-    ctx.fillStyle='#8a6a40'; ctx.fillRect(154,76,6,12); // tower body
-    ctx.fillStyle='#aa8a60'; ctx.fillRect(154,76,2,12); ctx.fillRect(152,74,10,3); // highlight + platform
-    ctx.fillStyle='rgba(255,240,100,0.4)'; ctx.fillRect(153,71,8,4); // signal glow
-    ctx.fillStyle='#ffe040'; ctx.fillRect(155,72,4,3); // signal light
-    ctx.fillStyle='#7a5020'; ctx.fillRect(165,85,5,2); // campfire logs
-    ctx.fillStyle='#c84000'; ctx.fillRect(166,83,3,2); // flame
-    ctx.fillStyle='#ffa820'; ctx.fillRect(167,82,1,2); // bright tip
+    // Scaled landmarks (0.82× around each camp center)
+    lm(67,107,()=>{
+      ctx.fillStyle='#b05050'; ctx.fillRect(65,101,2,3);
+      ctx.fillStyle='#c84878'; ctx.fillRect(61,103,12,2);
+      ctx.fillStyle='#e06090'; ctx.fillRect(62,105,10,2);
+      ctx.fillStyle='#f5e8c0'; ctx.fillRect(63,107,9,5);
+      ctx.fillStyle='#a0602a'; ctx.fillRect(66,110,3,2);
+      ctx.fillStyle='#88ccff'; ctx.fillRect(63,108,2,2); ctx.fillRect(69,108,2,2);
+      ctx.fillStyle='#2ea030'; ctx.fillRect(56,107,4,4); ctx.fillRect(57,105,2,3);
+      ctx.fillStyle='#c84878'; ctx.fillRect(58,107,1,1); ctx.fillRect(57,106,1,1);
+      ctx.fillStyle='#2ea030'; ctx.fillRect(74,107,4,4); ctx.fillRect(75,105,2,3);
+      ctx.fillStyle='#c84878'; ctx.fillRect(75,107,1,1); ctx.fillRect(76,106,1,1);
+    });
+    lm(47,71,()=>{
+      ctx.fillStyle='#d04020';
+      ctx.fillRect(40,66,16,2); ctx.fillRect(41,64,14,2);
+      ctx.fillRect(40,68,2,8); ctx.fillRect(54,68,2,8);
+      ctx.fillStyle='rgba(255,255,255,0.65)';
+      ctx.fillRect(47,67,1,4); ctx.fillRect(49,68,1,3);
+    });
+    lm(96,40,()=>{
+      ctx.fillStyle='#28b054'; ctx.fillRect(86,37,20,2);
+      ctx.fillStyle='#1a8040';
+      ctx.fillRect(87,35,2,2); ctx.fillRect(91,35,2,2); ctx.fillRect(95,35,2,2); ctx.fillRect(99,35,2,2); ctx.fillRect(103,35,2,2);
+      ctx.fillStyle='#c8943c'; ctx.fillRect(87,39,18,3);
+      ctx.fillStyle='#a07030'; ctx.fillRect(87,42,18,3);
+      ctx.fillStyle='#784618'; ctx.fillRect(87,37,1,7); ctx.fillRect(104,37,1,7);
+    });
+    lm(144,17,()=>{
+      ctx.fillStyle='#8898b4'; ctx.fillRect(140,15,9,10);
+      ctx.fillStyle='#aabcd0'; ctx.fillRect(140,15,2,10);
+      ctx.fillStyle='#8898b4'; ctx.fillRect(140,13,2,2); ctx.fillRect(144,13,2,2); ctx.fillRect(148,13,2,2);
+      ctx.fillStyle='#c0d4e8'; ctx.fillRect(141,10,7,4); ctx.fillRect(142,9,5,1);
+      ctx.fillStyle='#e8f4ff'; ctx.fillRect(143,10,3,2);
+      ctx.fillStyle='#ffe080'; ctx.fillRect(141,18,2,2); ctx.fillRect(146,18,2,2);
+      ctx.fillStyle='#2a1810'; ctx.fillRect(143,22,2,3);
+    });
+    lm(187,40,()=>{
+      ctx.fillStyle='#5a7090'; ctx.fillRect(183,33,10,13);
+      ctx.fillStyle='#4a6080'; ctx.fillRect(183,33,2,13);
+      ctx.fillStyle='#5a7090'; ctx.fillRect(181,31,3,2); ctx.fillRect(186,31,3,2); ctx.fillRect(191,31,2,2);
+      ctx.fillStyle='#ffe080'; ctx.fillRect(185,38,2,3); ctx.fillRect(189,38,2,3);
+      ctx.fillStyle='#ff6020'; ctx.fillRect(185,37,2,1); ctx.fillRect(189,37,2,1);
+      ctx.fillStyle='#2a1810'; ctx.fillRect(186,42,4,5);
+    });
+    lm(158,82,()=>{
+      ctx.fillStyle='#8a6a40'; ctx.fillRect(154,76,6,12);
+      ctx.fillStyle='#aa8a60'; ctx.fillRect(154,76,2,12); ctx.fillRect(152,74,10,3);
+      ctx.fillStyle='rgba(255,240,100,0.4)'; ctx.fillRect(153,71,8,4);
+      ctx.fillStyle='#ffe040'; ctx.fillRect(155,72,4,3);
+      ctx.fillStyle='#7a5020'; ctx.fillRect(165,85,5,2);
+      ctx.fillStyle='#c84000'; ctx.fillRect(166,83,3,2);
+      ctx.fillStyle='#ffa820'; ctx.fillRect(167,82,1,2);
+    });
   }, []);
 
   const nextGallerySlide = () => {
@@ -1078,26 +1115,6 @@ const SummitWanderlustAdventure = () => {
                   transition:'all 0.15s',
                 }}/>
 
-                {/* Name label — full only when selected/hovered, dim whisper otherwise */}
-                <div style={{
-                  fontFamily:'monospace',
-                  fontSize: isSelected ? '9px' : '6px',
-                  fontWeight: isSelected ? 'bold' : 'normal',
-                  color: isSelected ? '#fff' : isHovered ? `rgba(${app.glow},0.9)` : `rgba(${app.glow},${isVisited ? '0.45' : '0.28'})`,
-                  textTransform:'uppercase',
-                  letterSpacing: isSelected ? '0.1em' : '0.06em',
-                  whiteSpace:'nowrap',
-                  padding: isSelected ? '2px 7px 3px' : '1px 4px 1px',
-                  background: isSelected ? 'rgba(2,2,2,0.94)' : isHovered ? 'rgba(2,2,2,0.82)' : 'rgba(2,2,2,0.55)',
-                  border: `1px solid ${isSelected ? `rgba(${app.glow},0.65)` : `rgba(${app.glow},0.15)`}`,
-                  marginTop: 2,
-                  transition:'all 0.12s',
-                  textShadow: isSelected ? `0 0 8px rgba(${app.glow},0.5)` : 'none',
-                }}>
-                  {isVisited && !isSelected && <span style={{ marginRight:2, opacity:0.6 }}>✓</span>}
-                  {app.name}
-                </div>
-
                 {/* Ground dot + selected pulse ring */}
                 <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center', marginTop:2 }}>
                   {isSelected && (
@@ -1118,6 +1135,40 @@ const SummitWanderlustAdventure = () => {
                   }}/>
                 </div>
               </button>
+            );
+          })}
+
+          {/* ── Camp labels — marker layer above hiker (z=38) ── */}
+          {apps.map((app) => {
+            const node = mapNodes[app.id];
+            if (!node) return null;
+            const isSelected = mapSelectedApp?.id === app.id;
+            const isVisited = visitedCamps.has(app.id);
+            const isHovered = hoveredNode === app.id;
+            return (
+              <div key={`label-${app.id}`}
+                className="absolute pointer-events-none"
+                style={{
+                  left: `${node.x}%`,
+                  top: `max(58px, calc(${node.y}% - 92px))`,
+                  transform: 'translateX(-50%)',
+                  zIndex: 38,
+                  fontFamily: 'monospace',
+                  fontSize: isSelected ? '9px' : '6px',
+                  fontWeight: isSelected ? 'bold' : 'normal',
+                  color: isSelected ? '#fff' : isHovered ? `rgba(${app.glow},0.9)` : `rgba(${app.glow},${isVisited ? '0.45' : '0.28'})`,
+                  textTransform: 'uppercase',
+                  letterSpacing: isSelected ? '0.1em' : '0.06em',
+                  whiteSpace: 'nowrap',
+                  padding: isSelected ? '2px 7px 3px' : '1px 4px 1px',
+                  background: isSelected ? 'rgba(2,2,2,0.96)' : isHovered ? 'rgba(2,2,2,0.82)' : 'rgba(2,2,2,0.5)',
+                  border: `1px solid ${isSelected ? `rgba(${app.glow},0.65)` : `rgba(${app.glow},0.15)`}`,
+                  textShadow: isSelected ? `0 0 8px rgba(${app.glow},0.5)` : 'none',
+                  transition: 'all 0.12s',
+                }}>
+                {isVisited && !isSelected && <span style={{ marginRight:2, opacity:0.6 }}>✓ </span>}
+                {app.name}
+              </div>
             );
           })}
 
