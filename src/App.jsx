@@ -745,10 +745,10 @@ const SummitWanderlustAdventure = () => {
         />
       </div>
 
-      {/* Nav — Menu Toggle */}
+      {/* Nav — Menu Toggle (hidden during game map to avoid competing with HUD) */}
       <button
         onClick={() => setMenuOpen(!menuOpen)}
-        className="fixed top-5 right-5 z-50 bg-stone-900/90 backdrop-blur-sm p-3 rounded-full border border-stone-800 hover:border-stone-600 transition-all"
+        className={`fixed top-5 right-5 z-50 bg-stone-900/90 backdrop-blur-sm p-3 rounded-full border border-stone-800 hover:border-stone-600 transition-all ${mapVisible ? 'hidden' : ''}`}
         aria-label="Menu"
       >
         {menuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
@@ -877,7 +877,7 @@ const SummitWanderlustAdventure = () => {
           id="apps-title"
           ref={el => observerRefs.current[0] = el}
           className="relative w-full overflow-hidden"
-          style={{ height: '660px', background: '#264814' }}
+          style={{ height: '100vh', minHeight: 620, background: '#264814' }}
         >
           {/* Canvas terrain */}
           <canvas ref={mapCanvasRef} width={240} height={150}
@@ -1078,104 +1078,88 @@ const SummitWanderlustAdventure = () => {
                   transition:'all 0.15s',
                 }}/>
 
-                {/* Name label */}
+                {/* Name label — full only when selected/hovered, dim whisper otherwise */}
                 <div style={{
                   fontFamily:'monospace',
-                  fontSize: isSelected ? '9px' : '7px',
-                  fontWeight:'bold',
-                  color: isSelected ? '#fff' : isHovered ? `rgba(${app.glow},1)` : `rgba(${app.glow},${isVisited ? '0.9' : '0.65'})`,
+                  fontSize: isSelected ? '9px' : '6px',
+                  fontWeight: isSelected ? 'bold' : 'normal',
+                  color: isSelected ? '#fff' : isHovered ? `rgba(${app.glow},0.9)` : `rgba(${app.glow},${isVisited ? '0.45' : '0.28'})`,
                   textTransform:'uppercase',
-                  letterSpacing:'0.08em',
+                  letterSpacing: isSelected ? '0.1em' : '0.06em',
                   whiteSpace:'nowrap',
-                  padding: isSelected ? '2px 7px 3px' : '2px 5px 2px',
-                  background: isSelected ? `rgba(2,2,2,0.92)` : 'rgba(2,2,2,0.72)',
-                  border: `1px solid ${isSelected ? `rgba(${app.glow},0.7)` : `rgba(${app.glow},0.25)`}`,
+                  padding: isSelected ? '2px 7px 3px' : '1px 4px 1px',
+                  background: isSelected ? 'rgba(2,2,2,0.94)' : isHovered ? 'rgba(2,2,2,0.82)' : 'rgba(2,2,2,0.55)',
+                  border: `1px solid ${isSelected ? `rgba(${app.glow},0.65)` : `rgba(${app.glow},0.15)`}`,
                   marginTop: 2,
-                  transform: `translateY(${isHovered && !isSelected ? -2 : 0}px)`,
                   transition:'all 0.12s',
                   textShadow: isSelected ? `0 0 8px rgba(${app.glow},0.5)` : 'none',
                 }}>
-                  {isVisited && !isSelected && <span style={{ marginRight:3, opacity:0.8 }}>✓</span>}
+                  {isVisited && !isSelected && <span style={{ marginRight:2, opacity:0.6 }}>✓</span>}
                   {app.name}
                 </div>
 
-                {/* Ground dot */}
-                <div style={{
-                  width: isSelected ? 6 : 4,
-                  height: isSelected ? 6 : 4,
-                  borderRadius:'50%',
-                  background: isSelected ? `rgb(${app.glow})` : `rgba(${app.glow},${isVisited ? '0.6' : '0.35'})`,
-                  border:'1px solid rgba(0,0,0,0.6)',
-                  boxShadow: isSelected ? `0 0 8px rgba(${app.glow},0.7)` : 'none',
-                  transition:'all 0.15s',
-                  marginTop:1,
-                }}/>
+                {/* Ground dot + selected pulse ring */}
+                <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center', marginTop:2 }}>
+                  {isSelected && (
+                    <div style={{
+                      position:'absolute', width:16, height:16, borderRadius:'50%',
+                      border:`1px solid rgba(${app.glow},0.55)`,
+                      animation:'ringPulse 1.5s ease-out infinite',
+                    }}/>
+                  )}
+                  <div style={{
+                    width: isSelected ? 6 : 4,
+                    height: isSelected ? 6 : 4,
+                    borderRadius:'50%',
+                    background: isSelected ? `rgb(${app.glow})` : `rgba(${app.glow},${isVisited ? '0.5' : '0.28'})`,
+                    border:'1px solid rgba(0,0,0,0.5)',
+                    boxShadow: isSelected ? `0 0 8px rgba(${app.glow},0.7)` : 'none',
+                    transition:'all 0.15s',
+                  }}/>
+                </div>
               </button>
             );
           })}
 
-          {/* ── Location panel — slides up when camp selected ── */}
+          {/* ── Location panel — game HUD style ── */}
           {mapSelectedApp && !hikerWalking && (() => {
             const app = mapSelectedApp;
             const I = app.icon;
-            const enterLabel = app.cta.href ? app.cta.label + ' ↗' : 'Enter Camp →';
+            const doEnter = () => {
+              if (app.cta.href) window.open(app.cta.href, '_blank', 'noopener noreferrer');
+              else if (app.cta.action) app.cta.action();
+            };
             return (
               <div className="absolute bottom-0 left-0 right-0 z-40"
                 style={{
-                  background:'rgba(2,2,2,0.95)',
-                  borderTop:`2px solid rgba(${app.glow},0.7)`,
-                  boxShadow:`0 -6px 32px rgba(${app.glow},0.18)`,
-                  animation:'slideUpHUD 0.2s cubic-bezier(0.2,0,0.2,1) both',
-                }}
-              >
-                {/* Accent line */}
-                <div style={{ height:1, background:`linear-gradient(90deg, transparent, rgba(${app.glow},0.5) 25%, rgba(${app.glow},0.5) 75%, transparent)` }}/>
-
-                <div className="flex items-center gap-4" style={{ padding:'12px 20px 14px' }}>
-                  {/* Icon */}
-                  <div style={{ background:`rgba(${app.glow},0.12)`, border:`1.5px solid rgba(${app.glow},0.45)`, borderRadius:4, padding:'7px', flexShrink:0 }}>
-                    <I style={{ width:18, height:18, color:`rgb(${app.glow})` }}/>
+                  background: 'rgba(4,3,2,0.97)',
+                  borderTop: `1px solid rgba(${app.glow},0.5)`,
+                  animation: 'slideUpHUD 0.18s cubic-bezier(0.2,0,0.2,1) both',
+                }}>
+                <div style={{ height:1, background:`linear-gradient(90deg, transparent, rgba(${app.glow},0.4) 30%, rgba(${app.glow},0.4) 70%, transparent)` }}/>
+                <div className="flex items-center gap-4" style={{ padding:'10px 18px 12px' }}>
+                  {/* Camp icon */}
+                  <div style={{ background:`rgba(${app.glow},0.08)`, border:`1px solid rgba(${app.glow},0.3)`, borderRadius:3, padding:'6px', flexShrink:0 }}>
+                    <I style={{ width:16, height:16, color:`rgb(${app.glow})` }}/>
                   </div>
-
-                  {/* Name + description */}
+                  {/* Name + one-liner */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-0.5">
-                      <p style={{ fontFamily:'monospace', fontSize:'12px', fontWeight:'bold', letterSpacing:'0.07em', textTransform:'uppercase', color:'#fff', lineHeight:1, whiteSpace:'nowrap' }}>{app.name}</p>
-                      <p style={{ fontFamily:'monospace', fontSize:'8px', color:`rgba(${app.glow},0.75)`, letterSpacing:'0.06em', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{app.tagline}</p>
-                    </div>
-                    <p style={{ fontSize:'11px', color:'rgba(255,255,255,0.5)', lineHeight:1.4, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:420 }}>{app.description}</p>
+                    <p style={{ fontFamily:'monospace', fontSize:'11px', fontWeight:'bold', letterSpacing:'0.1em', textTransform:'uppercase', color:'#fff', lineHeight:1.2 }}>{app.name}</p>
+                    <p style={{ fontFamily:'monospace', fontSize:'8px', color:`rgba(${app.glow},0.65)`, marginTop:3, letterSpacing:'0.03em' }}>{app.tagline}</p>
                   </div>
-
-                  {/* Progress + CTAs */}
-                  <div className="flex flex-col items-end gap-2 shrink-0">
-                    <div className="flex items-center gap-2">
-                      {/* Primary CTA */}
-                      {app.cta.href ? (
-                        <a href={app.cta.href} target="_blank" rel="noopener noreferrer"
-                          style={{ fontFamily:'monospace', fontSize:'9px', fontWeight:'bold', textTransform:'uppercase', letterSpacing:'0.12em', color:'#000', background:`rgb(${app.glow})`, padding:'8px 16px', whiteSpace:'nowrap', textDecoration:'none', display:'block', boxShadow:`0 0 14px rgba(${app.glow},0.55)` }}>
-                          {enterLabel}
-                        </a>
-                      ) : (
-                        <button onClick={app.cta.action}
-                          style={{ fontFamily:'monospace', fontSize:'9px', fontWeight:'bold', textTransform:'uppercase', letterSpacing:'0.12em', color:'#000', background:`rgb(${app.glow})`, padding:'8px 16px', border:'none', cursor:'pointer', whiteSpace:'nowrap', boxShadow:`0 0 14px rgba(${app.glow},0.55)` }}>
-                          {enterLabel}
-                        </button>
-                      )}
-                      {/* Secondary CTA */}
-                      {app.ctaSecondary && (
-                        <a href={app.ctaSecondary.href} target="_blank" rel="noopener noreferrer"
-                          style={{ fontFamily:'monospace', fontSize:'9px', fontWeight:'bold', textTransform:'uppercase', letterSpacing:'0.12em', color:`rgba(${app.glow},0.8)`, background:'transparent', padding:'7px 14px', whiteSpace:'nowrap', textDecoration:'none', display:'block', border:`1px solid rgba(${app.glow},0.35)` }}>
-                          {app.ctaSecondary.label} ↗
-                        </a>
-                      )}
-                      {/* Close */}
-                      <button onClick={() => setMapSelectedApp(null)}
-                        style={{ fontFamily:'monospace', fontSize:'11px', color:'rgba(255,255,255,0.3)', background:'none', border:'1px solid rgba(255,255,255,0.12)', padding:'6px 10px', cursor:'pointer', lineHeight:1 }}>
-                        ✕
+                  {/* Single action */}
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex flex-col items-end gap-1">
+                      <button onClick={doEnter}
+                        style={{ fontFamily:'monospace', fontSize:'9px', fontWeight:'bold', textTransform:'uppercase', letterSpacing:'0.14em', color:'#000', background:`rgb(${app.glow})`, padding:'8px 20px', border:'none', cursor:'pointer', whiteSpace:'nowrap', boxShadow:`0 0 12px rgba(${app.glow},0.45)` }}>
+                        Enter Camp →
                       </button>
+                      <p style={{ fontFamily:'monospace', fontSize:'7px', color:'rgba(255,255,255,0.2)', letterSpacing:'0.12em', textAlign:'right' }}>{visitedCamps.size}/6 visited</p>
                     </div>
-                    {/* Progress */}
-                    <p style={{ fontFamily:'monospace', fontSize:'8px', color:'rgba(255,255,255,0.25)', letterSpacing:'0.12em' }}>Visited {visitedCamps.size}/6</p>
+                    <button onClick={() => setMapSelectedApp(null)}
+                      style={{ color:'rgba(255,255,255,0.22)', background:'none', border:'1px solid rgba(255,255,255,0.08)', padding:'5px 8px', cursor:'pointer', fontFamily:'monospace', fontSize:'10px', lineHeight:1, flexShrink:0 }}>
+                      ✕
+                    </button>
                   </div>
                 </div>
               </div>
