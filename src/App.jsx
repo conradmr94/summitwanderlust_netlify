@@ -312,17 +312,59 @@ const SummitWanderlustAdventure = () => {
     ctx.fillStyle = 'rgba(88,196,28,0.26)';
     ctx.beginPath(); ctx.ellipse(68,120,46,28,0,0,PI2); ctx.fill();
 
+    // ── 3b. TERRAIN TEXTURE (dark grass tufts + sunlit strips — kills flat stage feel) ──
+    ctx.fillStyle='rgba(8,48,0,0.22)';
+    [[22,60,5],[40,57,4],[58,68,4],[72,82,5],[88,100,4],[100,88,5],[120,112,4],
+     [132,96,4],[145,68,5],[160,62,4],[172,74,4],[182,90,5],[202,76,4],[215,92,4]
+    ].forEach(([x,y,w])=>ctx.fillRect(x,y,w,2));
+    // Sunlit grass highlights
+    ctx.fillStyle='rgba(100,180,20,0.14)';
+    [[28,62,4],[66,74,4],[98,94,4],[136,102,4],[175,82,4]].forEach(([x,y,w])=>ctx.fillRect(x,y,w,1));
+
+    // ── 3c. CENTER TERRAIN (open mid-zone needs land intelligence, not more objects) ──
+    // Extra grass variation in the open center field
+    ctx.fillStyle='rgba(6,44,0,0.18)';
+    [[82,72,5],[96,84,4],[110,76,5],[124,90,6],[138,80,4],[150,94,5]].forEach(([x,y,w])=>ctx.fillRect(x,y,w,2));
+    // Slope suggestion lines (faint dark curves implying terrain undulation)
+    ctx.strokeStyle='rgba(0,0,0,0.07)'; ctx.lineWidth=0.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(62,78); ctx.bezierCurveTo(92,74,122,80,156,76); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(78,96); ctx.bezierCurveTo(108,91,136,97,166,93); ctx.stroke();
+    // Slope edge band (mid-ground value shadow — land has contour, not flat)
+    const slope=ctx.createLinearGradient(0,64,0,78);
+    slope.addColorStop(0,'rgba(0,0,0,0)'); slope.addColorStop(0.45,'rgba(0,0,0,0.09)'); slope.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=slope; ctx.fillRect(0,64,W,14);
+    // Second shelf at lower mid-ground
+    const slope2=ctx.createLinearGradient(0,88,0,98);
+    slope2.addColorStop(0,'rgba(0,0,0,0)'); slope2.addColorStop(0.5,'rgba(0,0,0,0.06)'); slope2.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=slope2; ctx.fillRect(0,88,W,10);
+    // Path-wear zone under trail (warm buff — well-trodden earth, drawn before trail)
+    ctx.strokeStyle='rgba(130,90,24,0.09)'; ctx.lineWidth=7; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(115,126);
+    ctx.bezierCurveTo(98,124,82,119,67,111); ctx.bezierCurveTo(55,103,40,90,48,75);
+    ctx.bezierCurveTo(54,62,76,50,96,45);   ctx.bezierCurveTo(110,38,128,28,144,24);
+    ctx.bezierCurveTo(160,22,178,28,187,45); ctx.bezierCurveTo(196,60,188,76,158,87);
+    ctx.stroke();
+
     // ── 4. MOUNTAINS ──
-    const mtn = (cx,cy,w,h,body,snow) => {
-      ctx.fillStyle=body; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx-w/2,cy+h); ctx.lineTo(cx+w/2,cy+h); ctx.closePath(); ctx.fill();
-      const sh=Math.floor(h*0.28); ctx.fillStyle=snow; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx-Math.floor(w*0.17),cy+sh); ctx.lineTo(cx+Math.floor(w*0.17),cy+sh); ctx.closePath(); ctx.fill();
+    // 3 archetypes: alpine (narrow/tall), massif (wide/low), ridge (medium/purple)
+    // Real sky gaps between far peaks — reads as individual mountains, not wallpaper
+    const mtn = (cx, cy, w, h, body, shad, snow) => {
+      ctx.fillStyle=body;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx-w/2,cy+h); ctx.lineTo(cx+w/2,cy+h); ctx.closePath(); ctx.fill();
+      ctx.fillStyle=shad;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx-w/2,cy+h); ctx.lineTo(cx,cy+Math.floor(h*0.58)); ctx.closePath(); ctx.fill();
+      const sh=Math.floor(h*0.42),sw=Math.floor(w*0.30);
+      ctx.fillStyle=snow;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx-sw,cy+sh); ctx.lineTo(cx+sw,cy+sh); ctx.closePath(); ctx.fill();
     };
-    mtn(18,0,30,22,'#24283e','#c0caf0'); mtn(52,-1,34,24,'#24283e','#c0caf0'); mtn(88,1,28,20,'#24283e','#c0caf0');
-    mtn(120,0,32,22,'#2a1248','#b8a4f0'); mtn(154,-1,30,22,'#24283e','#c0caf0');
-    mtn(190,0,34,23,'#24283e','#c0caf0'); mtn(220,1,26,19,'#24283e','#c0caf0');
-    mtn(34,8,26,17,'#383c58','#d2dcff'); mtn(68,5,28,20,'#30205a','#ccc4f4');
-    mtn(104,6,30,20,'#30145a','#be98ff'); mtn(140,7,26,17,'#383c58','#d2dcff');
-    mtn(174,6,28,19,'#383c58','#d2dcff'); mtn(212,8,24,16,'#383c58','#d2dcff');
+    // Far row: 4 peaks — muted cool palette, sits behind atmospheric haze
+    mtn(15, -2, 22,26, '#1c2034','#121626','#a8b2cc'); // left alpine
+    mtn(72,  0, 50,22, '#1c2034','#121626','#a8b2cc'); // center massif
+    mtn(150,-1, 30,24, '#1e0e30','#120820','#9888bc'); // SSS purple ridge
+    mtn(214, 0, 24,25, '#1c2034','#121626','#a8b2cc'); // right alpine
+    // Near row: 2 peaks only — muted, clearly shorter, just hint of depth
+    mtn(44, 9, 20,13, '#282c44','#1a1e30','#b0b8cc');
+    mtn(182, 8, 18,12, '#282c44','#1a1e30','#b0b8cc');
 
     // ── 5. FOOTHILL BAND (anchors mountains to ground — creates horizon) ──
     // Deep shadow band — fills the gap between mountain bases (y≈22) and terrain (y≈50)
@@ -335,38 +377,58 @@ const SummitWanderlustAdventure = () => {
     ctx.fillStyle = '#306010';
     ctx.beginPath(); ctx.moveTo(0,40); ctx.bezierCurveTo(38,36,76,43,114,38); ctx.bezierCurveTo(152,33,190,41,W,38); ctx.lineTo(W,52); ctx.lineTo(0,54); ctx.closePath(); ctx.fill();
 
+    // ── 5b. HORIZON ACCENT ── (thin bright line to sell the sky/land separation)
+    ctx.strokeStyle='rgba(120,180,80,0.55)'; ctx.lineWidth=0.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(0,40); ctx.bezierCurveTo(38,36,76,43,114,38); ctx.bezierCurveTo(152,33,190,41,W,38); ctx.stroke();
+    // Atmospheric haze over upper mountains (mutes far-distance peaks)
+    const haze=ctx.createLinearGradient(0,0,0,30); haze.addColorStop(0,'rgba(120,160,220,0.0)'); haze.addColorStop(1,'rgba(120,160,220,0.22)');
+    ctx.fillStyle=haze; ctx.fillRect(0,0,W,30);
+
     // ── 6. LAKE ──
     ctx.fillStyle='#0a44a0'; ctx.beginPath(); ctx.ellipse(22,82,16,10,0,0,PI2); ctx.fill();
     ctx.fillStyle='#1c68c4'; ctx.beginPath(); ctx.ellipse(21,81,11,7,0,0,PI2); ctx.fill();
     ctx.fillStyle='#54a4e0'; ctx.beginPath(); ctx.ellipse(19,79,6,3,0,0,PI2); ctx.fill();
     ctx.fillStyle='rgba(180,230,255,0.7)'; ctx.fillRect(13,77,8,2); ctx.fillRect(16,79,4,1);
 
-    // ── 7. TREES (varied height — not perfectly uniform rows) ──
-    const pine = (x,y,dark) => {
-      const [c1,c2] = dark ? ['#124e36','#0a2e20'] : ['#1a6040','#10503a'];
-      ctx.fillStyle=c1; ctx.fillRect(x+2,y,2,3); ctx.fillRect(x+1,y+2,4,3); ctx.fillRect(x,y+4,6,4); ctx.fillRect(x+1,y+7,4,2);
-      ctx.fillStyle=c2; ctx.fillRect(x+2,y+8,2,3);
+    // ── 7. TREES ──
+    // Pine: 2-tier canopy with top highlight, dark underside per tier, visible trunk
+    // Each tier reads as a distinct layer — silhouette squint-tests as "pine"
+    const pine = (x, y, dark) => {
+      const [hi, mid, shad, tr] = dark
+        ? ['#1e6844','#124e36','#072818','#0a1c10']
+        : ['#2ea050','#1a6a40','#0e4028','#0a1c10'];
+      ctx.fillStyle=mid;  ctx.fillRect(x+2,y,  2,2); ctx.fillRect(x+1,y+2,4,2); // tier 1
+      ctx.fillStyle=shad; ctx.fillRect(x+2,y+3,2,1);                              // tier 1 shadow
+      ctx.fillStyle=hi;   ctx.fillRect(x,  y+4,6,1);                              // tier 2 highlight
+      ctx.fillStyle=mid;  ctx.fillRect(x,  y+5,6,2);                              // tier 2 body
+      ctx.fillStyle=shad; ctx.fillRect(x+1,y+6,4,1);                              // tier 2 shadow
+      ctx.fillStyle=tr;   ctx.fillRect(x+2,y+7,2,4);                              // trunk
     };
     const yv = (x,a) => [0,-a,a,-a,0,a,0,-a][Math.floor(x/6)%8];
     const sk = (x,p) => Math.floor(x/6)%p === p-1;
-    // Left forest (6 tapering rows with y-variation and occasional gaps)
-    for(let x=-2;x<66;x+=6)             pine(x, 38+yv(x,2), true);
-    for(let x=0;x<62;x+=6) if(!sk(x,5)) pine(x, 50+yv(x,2), true);
-    for(let x=-2;x<56;x+=6)             pine(x, 62+yv(x,2), true);
-    for(let x=0;x<48;x+=6) if(!sk(x,4)) pine(x, 74+yv(x,1), false);
-    for(let x=0;x<38;x+=6)             pine(x, 86+yv(x,1), false);
-    for(let x=0;x<26;x+=6)             pine(x, 97+yv(x,1), false);
-    // Mountain tree line
+    // Left forest
+    for(let x=-2;x<66;x+=6)               pine(x, 38+yv(x,2), true);
+    for(let x=0;x<62;x+=6) if(!sk(x,5))   pine(x, 50+yv(x,2), true);
+    for(let x=-2;x<56;x+=6)               pine(x, 62+yv(x,2), true);
+    for(let x=0;x<48;x+=6) if(!sk(x,4))   pine(x, 74+yv(x,1), false);
+    for(let x=0;x<38;x+=6)               pine(x, 86+yv(x,1), false);
+    for(let x=0;x<26;x+=6)               pine(x, 97+yv(x,1), false);
+    // Mountain treeline
     for(let x=78;x<116;x+=6) if(!sk(x,4)) pine(x, 46+yv(x,2), true);
-    for(let x=82;x<112;x+=6)              pine(x, 58+yv(x,1), true);
-    // Right fortress (stepped rows with gaps)
-    for(let x=148;x<240;x+=6)             pine(x, 38+yv(x,2), true);
+    for(let x=82;x<112;x+=6)               pine(x, 58+yv(x,1), true);
+    // Right fortress forest
+    for(let x=148;x<240;x+=6)               pine(x, 38+yv(x,2), true);
     for(let x=152;x<238;x+=6) if(!sk(x,5)) pine(x, 50+yv(x,2), true);
-    for(let x=152;x<234;x+=6)             pine(x, 62+yv(x,1), true);
+    for(let x=152;x<234;x+=6)               pine(x, 62+yv(x,1), true);
     for(let x=154;x<228;x+=6) if(!sk(x,4)) pine(x, 74+yv(x,1), true);
-    for(let x=156;x<218;x+=6)             pine(x, 86+yv(x,1), true);
-    // Meadow round-trees
-    const rtree=(x,y)=>{ ctx.fillStyle='#247016'; ctx.fillRect(x,y+2,8,6); ctx.fillStyle='#42ae1e'; ctx.fillRect(x+1,y,6,6); ctx.fillRect(x,y+3,8,3); ctx.fillStyle='#6ed436'; ctx.fillRect(x+2,y+1,4,2); ctx.fillStyle='#784618'; ctx.fillRect(x+3,y+7,2,3); };
+    for(let x=156;x<218;x+=6)               pine(x, 86+yv(x,1), true);
+    // Meadow broadleaf: circular canopy mass with visible trunk + highlight
+    const rtree=(x,y)=>{
+      ctx.fillStyle='#1a5c12'; ctx.fillRect(x,y+3,8,5);       // dark underside
+      ctx.fillStyle='#2e8c1c'; ctx.fillRect(x+1,y,6,5); ctx.fillRect(x,y+2,8,3); // canopy
+      ctx.fillStyle='#4ab832'; ctx.fillRect(x+2,y+1,4,2);     // highlight cap
+      ctx.fillStyle='#5a3010'; ctx.fillRect(x+3,y+7,2,4);     // trunk
+    };
     [30,40,52,84,96,108].forEach(x=>rtree(x,98)); [34,44,88,100].forEach(x=>rtree(x,112));
 
     // ── 8. ROCKS ──
@@ -374,16 +436,26 @@ const SummitWanderlustAdventure = () => {
     [[184,56],[194,62],[178,68],[200,68],[188,76],[204,54],[192,82]].forEach(([x,y])=>rk(x,y));
 
     // ── 9. FLOWERS ──
-    const fl=(x,y,c)=>{ctx.fillStyle=c;ctx.fillRect(x,y,2,2);};
-    [[36,106,'#ff88bb'],[46,114,'#ffaacc'],[54,104,'#fff'],[60,110,'#ffee44'],[68,116,'#ff88bb'],[76,108,'#88ffcc'],
-     [42,120,'#ffaacc'],[58,122,'#fff'],[66,118,'#ffee44'],[52,126,'#ff6688'],[72,120,'#ffbbdd'],[80,116,'#88ffaa']].forEach(([x,y,c])=>fl(x,y,c));
+    // Grouped patch beds: green base + clustered heads = reads as "flower bed" not "confetti"
+    const fpatch = (cx, cy, c1, c2) => {
+      ctx.fillStyle='#3a8018'; ctx.fillRect(cx-3,cy+1,7,3); // green ground bed
+      ctx.fillStyle=c1; ctx.fillRect(cx-2,cy-1,2,2); ctx.fillRect(cx+1,cy,2,2);
+      ctx.fillStyle=c2; ctx.fillRect(cx,cy-2,2,2);   ctx.fillRect(cx-1,cy+1,2,1);
+    };
+    fpatch(40,108,'#ff88bb','#ffffff'); fpatch(54,106,'#ffee44','#ff88bb');
+    fpatch(66,116,'#88ffcc','#ffee44'); fpatch(48,120,'#ffaacc','#ffffff');
+    fpatch(62,122,'#ffee44','#ff6688'); fpatch(76,118,'#88ffaa','#88ffcc');
 
-    // ── 10. RIVER ──
+    // ── 10. RIVER ── (dark shore edge + body + highlight = reads as water, not line)
     ctx.lineCap='round'; ctx.lineJoin='round';
-    ctx.strokeStyle='#1058a4'; ctx.lineWidth=2.5;
+    ctx.strokeStyle='#063478'; ctx.lineWidth=5.5; // dark shore edge
     ctx.beginPath(); ctx.moveTo(96,45); ctx.quadraticCurveTo(62,62,48,75); ctx.quadraticCurveTo(34,80,22,82); ctx.stroke();
-    ctx.strokeStyle='#46a0dc'; ctx.lineWidth=1;
+    ctx.strokeStyle='#1058a4'; ctx.lineWidth=3.5; // river body
     ctx.beginPath(); ctx.moveTo(96,45); ctx.quadraticCurveTo(62,62,48,75); ctx.quadraticCurveTo(34,80,22,82); ctx.stroke();
+    ctx.strokeStyle='#46a0dc'; ctx.lineWidth=1.5; // river highlight
+    ctx.beginPath(); ctx.moveTo(95,45); ctx.quadraticCurveTo(61,61,47,74); ctx.quadraticCurveTo(33,80,21,82); ctx.stroke();
+    ctx.strokeStyle='rgba(160,220,255,0.55)'; ctx.lineWidth=0.5; // shimmer
+    ctx.beginPath(); ctx.moveTo(94,46); ctx.quadraticCurveTo(60,62,46,75); ctx.stroke();
 
     // ── 11. TRAIL (shadow → dirt → surface) ──
     const tp=()=>{
@@ -396,13 +468,15 @@ const SummitWanderlustAdventure = () => {
       ctx.bezierCurveTo(196,60,188,76,158,87);
     };
     ctx.lineCap='round'; ctx.lineJoin='round';
-    ctx.strokeStyle='rgba(0,0,0,0.4)'; ctx.lineWidth=3; tp(); ctx.stroke();
-    ctx.strokeStyle='#6a4610'; ctx.lineWidth=2; tp(); ctx.stroke();
-    ctx.strokeStyle='#ac8020'; ctx.lineWidth=1; tp(); ctx.stroke();
+    // Path channel — subtle groove under trail
+    ctx.strokeStyle='rgba(0,0,0,0.10)'; ctx.lineWidth=5; tp(); ctx.stroke();
+    ctx.strokeStyle='rgba(0,0,0,0.11)'; ctx.lineWidth=1.5; tp(); ctx.stroke();
+    ctx.strokeStyle='#4e3408'; ctx.lineWidth=0.9; tp(); ctx.stroke();
+    ctx.strokeStyle='#6e4e20'; ctx.lineWidth=0.4; tp(); ctx.stroke();
 
     // ── 12. FOOTPRINTS (on trail surface) ──
     const bzP=(t,ax,ay,bx,by,cx,cy,dx,dy)=>{const m=1-t;return[m*m*m*ax+3*m*m*t*bx+3*m*t*t*cx+t*t*t*dx,m*m*m*ay+3*m*m*t*by+3*m*t*t*cy+t*t*t*dy];};
-    ctx.fillStyle='rgba(46,24,4,0.48)';
+    ctx.fillStyle='rgba(46,24,4,0.22)';
     [[115,126,98,124,82,119,67,111],[67,111,55,103,40,90,48,75],[48,75,54,62,76,50,96,45],
      [96,45,110,38,128,28,144,24],[144,24,160,22,178,28,187,45],[187,45,196,60,188,76,158,87]
     ].forEach(([ax,ay,bx,by,cx,cy,dx,dy])=>{
@@ -415,100 +489,243 @@ const SummitWanderlustAdventure = () => {
     });
 
     // ── 13. TRAIL HIGHLIGHT + DASHES ──
-    ctx.strokeStyle='rgba(235,195,90,0.45)'; ctx.lineWidth=0.6; tp(); ctx.stroke();
-    ctx.strokeStyle='rgba(255,215,120,0.28)'; ctx.lineWidth=0.5; ctx.setLineDash([2,7]); tp(); ctx.stroke();
+    ctx.strokeStyle='rgba(235,195,90,0.28)'; ctx.lineWidth=0.5; tp(); ctx.stroke();
+    ctx.strokeStyle='rgba(255,215,120,0.16)'; ctx.lineWidth=0.4; ctx.setLineDash([2,8]); tp(); ctx.stroke();
     ctx.setLineDash([]);
 
     // ── 14. CAMP LANDMARKS ──
     // Helper: scale landmark ~18% smaller around its center
-    const lm = (cx, cy, fn) => {
-      ctx.save(); ctx.translate(cx,cy); ctx.scale(0.82,0.82); ctx.translate(-cx,-cy); fn(); ctx.restore();
+    const lm = (cx, cy, fn, s=0.82) => {
+      ctx.save(); ctx.translate(cx,cy); ctx.scale(s,s); ctx.translate(-cx,-cy); fn(); ctx.restore();
     };
 
-    // Mini-environments (ground layer, drawn before buildings)
-    // lovocado: warm meadow patch, flower cluster, door path
-    ctx.fillStyle='rgba(88,196,28,0.32)'; ctx.beginPath(); ctx.ellipse(67,112,14,5,0,0,PI2); ctx.fill();
-    ctx.fillStyle='#ff88bb'; ctx.fillRect(52,112,2,2); ctx.fillRect(57,111,2,2); ctx.fillRect(62,113,2,2);
-    ctx.fillStyle='#ffcc44'; ctx.fillRect(55,112,2,2); ctx.fillRect(60,112,2,2);
-    ctx.fillStyle='#9a9080'; ctx.fillRect(67,111,2,2); ctx.fillRect(69,110,2,2);
-    // breathe: reeds at bank, stepping stones, deeper water
-    ctx.fillStyle='#4a9030'; ctx.fillRect(34,72,1,5); ctx.fillRect(36,71,1,6); ctx.fillRect(38,72,1,5);
-    ctx.fillStyle='#3a7028'; ctx.fillRect(33,73,1,4); ctx.fillRect(37,70,1,5);
-    ctx.fillStyle='#8898a0'; ctx.fillRect(35,76,3,2); ctx.fillRect(40,76,3,2); ctx.fillRect(44,76,3,2);
-    ctx.fillStyle='#0a5888'; ctx.fillRect(25,79,5,3); ctx.fillRect(22,81,4,3);
-    // yammoing: stacked crates, herb tufts, warm path stones
-    ctx.fillStyle='#b08040'; ctx.fillRect(78,43,5,4); ctx.fillRect(80,41,4,3);
-    ctx.fillStyle='#c89050'; ctx.fillRect(78,43,5,1); ctx.fillRect(80,41,4,1);
-    ctx.fillStyle='#60a020'; ctx.fillRect(82,46,2,3); ctx.fillRect(85,45,2,4); ctx.fillRect(84,47,2,3);
-    ctx.fillStyle='#aa9880'; ctx.fillRect(97,47,2,2); ctx.fillRect(101,47,2,2); ctx.fillRect(105,47,2,2);
-    // sss: purple ground shadow, rocky ridge, accent grass
-    ctx.fillStyle='rgba(40,10,70,0.42)'; ctx.beginPath(); ctx.ellipse(144,25,14,5,0,0,PI2); ctx.fill();
-    ctx.fillStyle='#5a5a7a'; ctx.fillRect(130,22,5,3); ctx.fillRect(135,21,4,2); ctx.fillRect(153,22,5,3); ctx.fillRect(158,21,4,2);
-    ctx.fillStyle='#3a1a5e'; ctx.fillRect(131,25,3,2); ctx.fillRect(154,25,3,2);
-    ctx.fillStyle='#5a2080'; ctx.fillRect(136,24,2,2); ctx.fillRect(139,23,1,2); ctx.fillRect(150,24,2,2); ctx.fillRect(153,23,1,2);
-    // deva: dark stone shadow, stone tiles, sharp grass
-    ctx.fillStyle='rgba(20,30,40,0.52)'; ctx.beginPath(); ctx.ellipse(187,48,18,6,0,0,PI2); ctx.fill();
-    ctx.fillStyle='#4a5060'; ctx.fillRect(172,44,3,2); ctx.fillRect(176,45,3,2); ctx.fillRect(200,44,3,2); ctx.fillRect(204,45,3,2);
-    ctx.fillStyle='#1e2a18'; ctx.fillRect(173,47,2,2); ctx.fillRect(178,46,2,2); ctx.fillRect(201,47,2,2);
-    // igottyou: dusty ground ring, campfire glow, worn path
-    ctx.fillStyle='rgba(150,95,25,0.3)'; ctx.beginPath(); ctx.ellipse(158,89,20,6,0,0,PI2); ctx.fill();
-    ctx.fillStyle='rgba(255,110,20,0.16)'; ctx.beginPath(); ctx.ellipse(168,86,9,4,0,0,PI2); ctx.fill();
-    ctx.fillStyle='#7a6040'; ctx.fillRect(144,89,4,2); ctx.fillRect(148,88,3,2); ctx.fillRect(151,87,3,2);
+    // ── Per-camp ground biomes — each camp's terrain is distinct and authored ──
+    // Lovocado: crisp meadow clearing — 3-tone ground, deliberate cobble path, 3-flower clusters
+    // Ground clearing: base layer + bright center + dark edge rim (3 tones, fillRect only)
+    ctx.fillStyle='#3a7c10'; ctx.fillRect(48,109,38,12); // rim grass
+    ctx.fillStyle='#46961a'; ctx.fillRect(51,110,32,10); // mid clearing
+    ctx.fillStyle='#54aa22'; ctx.fillRect(54,111,26,8);  // bright center pad
+    // Cobblestone path (individual stones, 3×2 each, alternating light/shadow)
+    ctx.fillStyle='#9a8a6e'; ctx.fillRect(60,114,3,2); ctx.fillRect(63,116,3,2); ctx.fillRect(65,113,3,2);
+    ctx.fillStyle='#7a6a52'; ctx.fillRect(60,115,3,1); ctx.fillRect(63,117,3,1); ctx.fillRect(65,114,3,1); // stone shadow edge
+    ctx.fillStyle='#b4a484'; ctx.fillRect(60,114,1,1); ctx.fillRect(63,116,1,1); ctx.fillRect(65,113,1,1); // stone highlight
+    // Left flower cluster (pink + white 3-head on green bed)
+    ctx.fillStyle='#2e6c0e'; ctx.fillRect(50,111,7,3); // bed base
+    ctx.fillStyle='#ff88bb'; ctx.fillRect(51,110,2,2); ctx.fillRect(54,111,2,2); // pink heads
+    ctx.fillStyle='#ffffff';  ctx.fillRect(53,109,2,2);                           // white head
+    ctx.fillStyle='#ffbbdd'; ctx.fillRect(51,110,1,1); ctx.fillRect(53,109,1,1); // petal highlight
+    // Right flower cluster (yellow + orange)
+    ctx.fillStyle='#2e6c0e'; ctx.fillRect(71,112,7,3); // bed base
+    ctx.fillStyle='#ffee44'; ctx.fillRect(72,111,2,2); ctx.fillRect(75,112,2,2); // yellow heads
+    ctx.fillStyle='#ff9922'; ctx.fillRect(74,110,2,2);                           // orange head
+    ctx.fillStyle='#fff08a'; ctx.fillRect(72,111,1,1); ctx.fillRect(74,110,1,1); // highlight
 
-    // Scaled landmarks (0.82× around each camp center)
+    // BreatheMindful: dark riverbank mud under gate + shore stones + reed base
+    ctx.fillStyle='rgba(28,16,4,0.32)'; ctx.beginPath(); ctx.ellipse(47,78,22,6,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#4a9030'; ctx.fillRect(32,68,2,8); ctx.fillRect(35,67,2,9); ctx.fillRect(38,68,2,8); // reeds
+    ctx.fillStyle='#2e5c1c'; ctx.fillRect(33,69,1,6); ctx.fillRect(36,68,1,6); // reed shadow
+    ctx.fillStyle='#6a7e88'; ctx.fillRect(34,76,5,2); ctx.fillRect(41,76,4,2); // shore stones
+
+    // Yammoing: packed warm-brown dirt pad + herb garden + path stones
+    ctx.fillStyle='rgba(130,90,20,0.24)'; ctx.beginPath(); ctx.ellipse(96,48,26,7,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#8a7858'; ctx.fillRect(89,47,4,2); ctx.fillRect(94,47,4,2); ctx.fillRect(99,47,4,2); // path stones
+    ctx.fillStyle='#2e8810'; ctx.fillRect(108,42,2,6); ctx.fillRect(111,41,2,7); ctx.fillRect(114,43,2,5); // herbs
+
+    // SSS: dark rocky platform + purple-lit stone tiles (feels ancient/mystical)
+    ctx.fillStyle='rgba(28,6,54,0.48)'; ctx.beginPath(); ctx.ellipse(144,27,20,6,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#404060'; ctx.fillRect(130,23,5,3); ctx.fillRect(136,22,5,2); // rock left
+    ctx.fillRect(152,23,5,3); ctx.fillRect(157,22,4,2); // rock right
+    ctx.fillStyle='#281040'; ctx.fillRect(131,25,3,2); ctx.fillRect(153,25,3,2); // shadow gaps
+    ctx.fillStyle='rgba(140,60,220,0.14)'; ctx.fillRect(136,24,14,3); // purple ground glow
+
+    // Deva: cool grey stone ground tiles radiating from tower (rocky platform)
+    ctx.fillStyle='rgba(16,20,28,0.44)'; ctx.beginPath(); ctx.ellipse(187,51,28,8,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#363e4a'; ctx.fillRect(174,47,5,2); ctx.fillRect(180,46,5,2); ctx.fillRect(186,47,5,2);
+    ctx.fillRect(192,47,5,2); ctx.fillRect(198,47,4,2); // stone tiles
+    ctx.fillStyle='#222832'; ctx.fillRect(175,49,3,2); ctx.fillRect(187,49,4,2); ctx.fillRect(199,49,2,2); // tile gaps
+
+    // Igottyou: ember-lit warm earth + worn dirt listening post + log seat
+    ctx.fillStyle='rgba(180,70,8,0.16)'; ctx.beginPath(); ctx.ellipse(162,89,20,6,0,0,PI2); ctx.fill();
+    ctx.fillStyle='rgba(100,50,8,0.28)'; ctx.beginPath(); ctx.ellipse(162,90,12,4,0,0,PI2); ctx.fill();
+    ctx.fillStyle='#5e4024'; ctx.fillRect(148,89,5,2); ctx.fillRect(153,88,4,2); // worn path
+    ctx.fillStyle='#3e2810'; ctx.fillRect(170,91,8,2); ctx.fillRect(168,89,4,2); // log seat
+
+    // ── Contact shadows (dark ovals directly under each building — grounds them in world) ──
+    const cs = (cx, cy, rx, ry) => {
+      ctx.fillStyle='rgba(0,0,0,0.32)';
+      ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, PI2); ctx.fill();
+    };
+    cs(67,116, 13,3.5);   // lovocado base
+    cs(47,79,  14,3.5);   // breathe base
+    cs(96,49,  16,4);     // yammoing base
+    cs(144,28, 9, 2.5);   // sss base (smaller — 0.68 scale)
+    cs(187,52, 17,4.5);   // deva base
+    cs(162,91, 13,3.5);   // igottyou base
+
+    // ── Landmark buildings (strong silhouettes — squint test: one second ID) ──
+
+    // Lovocado: cozy cottage — pixel staircase roof (NO bezier), chimney, walls, door, windows
     lm(67,107,()=>{
-      ctx.fillStyle='#b05050'; ctx.fillRect(65,101,2,3);
-      ctx.fillStyle='#c84878'; ctx.fillRect(61,103,12,2);
-      ctx.fillStyle='#e06090'; ctx.fillRect(62,105,10,2);
-      ctx.fillStyle='#f5e8c0'; ctx.fillRect(63,107,9,5);
-      ctx.fillStyle='#a0602a'; ctx.fillRect(66,110,3,2);
-      ctx.fillStyle='#88ccff'; ctx.fillRect(63,108,2,2); ctx.fillRect(69,108,2,2);
-      ctx.fillStyle='#2ea030'; ctx.fillRect(56,107,4,4); ctx.fillRect(57,105,2,3);
-      ctx.fillStyle='#c84878'; ctx.fillRect(58,107,1,1); ctx.fillRect(57,106,1,1);
-      ctx.fillStyle='#2ea030'; ctx.fillRect(74,107,4,4); ctx.fillRect(75,105,2,3);
-      ctx.fillStyle='#c84878'; ctx.fillRect(75,107,1,1); ctx.fillRect(76,106,1,1);
+      const rlit='#d04060', rshad='#882035', reave='#b83050', rrim='#f06888';
+      // Chimney — above roof peak, 3 tones
+      ctx.fillStyle='#7a3828'; ctx.fillRect(70,100,2,5);
+      ctx.fillStyle='#994830'; ctx.fillRect(70,100,1,5); // lit face
+      ctx.fillStyle='#5a2418'; ctx.fillRect(71,100,1,5); // shadow face
+      // Pixel staircase roof — left half lit, right half shadow, no bezier
+      ctx.fillStyle=rrim;  ctx.fillRect(67,101,2,1);                              // peak tip (2 px wide)
+      ctx.fillStyle=rlit;  ctx.fillRect(65,102,2,1); ctx.fillStyle=rshad; ctx.fillRect(67,102,4,1);
+      ctx.fillStyle=rlit;  ctx.fillRect(63,103,4,1); ctx.fillStyle=rshad; ctx.fillRect(67,103,5,1);
+      ctx.fillStyle=rlit;  ctx.fillRect(61,104,6,1); ctx.fillStyle=rshad; ctx.fillRect(67,104,6,1);
+      ctx.fillStyle=rlit;  ctx.fillRect(60,105,7,1); ctx.fillStyle=rshad; ctx.fillRect(67,105,7,1);
+      ctx.fillStyle=reave; ctx.fillRect(59,106,16,2); // eave band (full width)
+      ctx.fillStyle=rshad; ctx.fillRect(67,106,8,2);  // eave right shadow half
+      // Walls — cream body, right side shadow, full block
+      ctx.fillStyle='#ede0bc'; ctx.fillRect(60,108,14,7);
+      ctx.fillStyle='#cdc4a0'; ctx.fillRect(68,108,6,7); // shadow wall (right)
+      ctx.fillStyle='#b0a882'; ctx.fillRect(68,114,6,1); // base shadow line
+      // Door — 4×5, brown, centred, lit left strip
+      ctx.fillStyle='#6a3e18'; ctx.fillRect(65,109,4,6);
+      ctx.fillStyle='#8a5428'; ctx.fillRect(65,109,1,6); // door lit strip
+      ctx.fillStyle='#3e2008'; ctx.fillRect(68,109,1,6); // door shadow strip
+      // Windows — 3×3 with highlight corner
+      ctx.fillStyle='#7ab8e8'; ctx.fillRect(61,110,3,3); ctx.fillRect(71,110,3,3);
+      ctx.fillStyle='#ccecff'; ctx.fillRect(61,110,1,1); ctx.fillRect(71,110,1,1); // lit corner
+      ctx.fillStyle='#4880b0'; ctx.fillRect(63,112,1,1); ctx.fillRect(73,112,1,1); // shadow corner
     });
+
+    // BreatheMindful: torii gate — two pillars + two crossbeams, ends curve up
     lm(47,71,()=>{
-      ctx.fillStyle='#d04020';
-      ctx.fillRect(40,66,16,2); ctx.fillRect(41,64,14,2);
-      ctx.fillRect(40,68,2,8); ctx.fillRect(54,68,2,8);
-      ctx.fillStyle='rgba(255,255,255,0.65)';
-      ctx.fillRect(47,67,1,4); ctx.fillRect(49,68,1,3);
-    });
+      // Two pillars (left and right)
+      ctx.fillStyle='#b83018'; ctx.fillRect(39,66,3,11); ctx.fillRect(54,66,3,11);
+      ctx.fillStyle='#d84030'; ctx.fillRect(39,66,1,11); ctx.fillRect(54,66,1,11); // lit face
+      ctx.fillStyle='#801808'; ctx.fillRect(41,66,1,11); ctx.fillRect(56,66,1,11); // shadow face
+      // Lower crossbeam (straight, between pillars)
+      ctx.fillStyle='#b83018'; ctx.fillRect(38,70,21,3);
+      ctx.fillStyle='#d84030'; ctx.fillRect(38,70,21,1); // top highlight
+      ctx.fillStyle='#801808'; ctx.fillRect(38,72,21,1); // bottom shadow
+      // Upper crossbeam (wider)
+      ctx.fillStyle='#b83018'; ctx.fillRect(37,65,23,3);
+      ctx.fillStyle='#d84030'; ctx.fillRect(37,65,23,1); // top highlight
+      // End caps — curved-up silhouette (the iconic torii sweep)
+      ctx.fillStyle='#b83018';
+      ctx.fillRect(36,64,3,2); ctx.fillRect(58,64,3,2); // first step up
+      ctx.fillRect(35,63,2,2); ctx.fillRect(60,63,2,2); // second step up
+    }, 0.70);
+
+    // Yammoing: open market kiosk — posts + canopy + striped awning + counter
     lm(96,40,()=>{
-      ctx.fillStyle='#28b054'; ctx.fillRect(86,37,20,2);
-      ctx.fillStyle='#1a8040';
-      ctx.fillRect(87,35,2,2); ctx.fillRect(91,35,2,2); ctx.fillRect(95,35,2,2); ctx.fillRect(99,35,2,2); ctx.fillRect(103,35,2,2);
-      ctx.fillStyle='#c8943c'; ctx.fillRect(87,39,18,3);
-      ctx.fillStyle='#a07030'; ctx.fillRect(87,42,18,3);
-      ctx.fillStyle='#784618'; ctx.fillRect(87,37,1,7); ctx.fillRect(104,37,1,7);
-    });
+      // Support posts
+      ctx.fillStyle='#4e3010'; ctx.fillRect(87,36,2,13); ctx.fillRect(103,36,2,13);
+      ctx.fillStyle='#6a4418'; ctx.fillRect(87,36,1,13); ctx.fillRect(103,36,1,13); // highlight
+      // Roof canopy (green, overhanging both sides)
+      ctx.fillStyle='#168030'; ctx.fillRect(83,34,22,2); // canopy shadow base
+      ctx.fillStyle='#20a840'; ctx.fillRect(83,35,22,2); // canopy body
+      ctx.fillStyle='#30c050'; ctx.fillRect(83,34,22,1); // top highlight
+      // Striped awning edge (yellow/green alternating)
+      ctx.fillStyle='#ffc820'; ctx.fillRect(84,37,4,2); ctx.fillRect(92,37,4,2); ctx.fillRect(100,37,4,2);
+      ctx.fillStyle='#168030'; ctx.fillRect(88,37,4,2); ctx.fillRect(96,37,4,2); ctx.fillRect(104,37,1,2);
+      // Counter
+      ctx.fillStyle='#d0a050'; ctx.fillRect(87,39,18,1); // counter top highlight
+      ctx.fillStyle='#b08038'; ctx.fillRect(87,40,18,3); // counter face
+      ctx.fillStyle='#886020'; ctx.fillRect(87,43,18,1); // counter bottom shadow
+      // Produce on counter (herb bunches, red jar)
+      ctx.fillStyle='#30a018'; ctx.fillRect(89,37,2,3); ctx.fillRect(93,37,2,4); ctx.fillRect(97,37,2,3);
+      ctx.fillStyle='#d03018'; ctx.fillRect(101,37,3,4); // red jar
+      ctx.fillStyle='#f04028'; ctx.fillRect(101,37,3,1); // jar highlight
+    }, 0.78);
+
+    // SSS: domed observatory — staircase dome pixel art + rectangular base
     lm(144,17,()=>{
-      ctx.fillStyle='#8898b4'; ctx.fillRect(140,15,9,10);
-      ctx.fillStyle='#aabcd0'; ctx.fillRect(140,15,2,10);
-      ctx.fillStyle='#8898b4'; ctx.fillRect(140,13,2,2); ctx.fillRect(144,13,2,2); ctx.fillRect(148,13,2,2);
-      ctx.fillStyle='#c0d4e8'; ctx.fillRect(141,10,7,4); ctx.fillRect(142,9,5,1);
-      ctx.fillStyle='#e8f4ff'; ctx.fillRect(143,10,3,2);
-      ctx.fillStyle='#ffe080'; ctx.fillRect(141,18,2,2); ctx.fillRect(146,18,2,2);
-      ctx.fillStyle='#2a1810'; ctx.fillRect(143,22,2,3);
-    });
+      // Base structure (stone)
+      ctx.fillStyle='#505c74'; ctx.fillRect(138,18,12,9);
+      ctx.fillStyle='#7088a8'; ctx.fillRect(138,18,2,9); // lit left face
+      ctx.fillStyle='#384050'; ctx.fillRect(148,18,2,9); // shadow right face
+      // Dome (staircase semicircle — iconic at pixel scale)
+      ctx.fillStyle='#607898';
+      ctx.fillRect(143,10,2,2); // peak
+      ctx.fillRect(142,11,4,2);
+      ctx.fillRect(140,12,8,2);
+      ctx.fillRect(139,14,10,4); // dome base band
+      ctx.fillStyle='#80a0c0'; // dome lit face (left)
+      ctx.fillRect(140,12,2,6); ctx.fillRect(139,14,1,4);
+      ctx.fillStyle='#405060'; // dome shadow face (right)
+      ctx.fillRect(146,12,2,6); ctx.fillRect(147,14,2,4);
+      ctx.fillStyle='#b0cce0'; // dome highlight cap
+      ctx.fillRect(143,10,2,1); ctx.fillRect(142,11,1,1);
+      // Telescope port window (dark = "hole")
+      ctx.fillStyle='#c0d8f0'; ctx.fillRect(148,21,3,2); // lit surround
+      ctx.fillStyle='#080c14'; ctx.fillRect(149,21,2,2); // dark port
+      // Door
+      ctx.fillStyle='#201008'; ctx.fillRect(143,23,2,4);
+      ctx.fillStyle='#302010'; ctx.fillRect(143,23,1,4); // door edge
+    }, 0.68);
+
+    // Deva: stone watchtower — 2-level tower, battlements, torch, gate arch
     lm(187,40,()=>{
-      ctx.fillStyle='#5a7090'; ctx.fillRect(183,33,10,13);
-      ctx.fillStyle='#4a6080'; ctx.fillRect(183,33,2,13);
-      ctx.fillStyle='#5a7090'; ctx.fillRect(181,31,3,2); ctx.fillRect(186,31,3,2); ctx.fillRect(191,31,2,2);
-      ctx.fillStyle='#ffe080'; ctx.fillRect(185,38,2,3); ctx.fillRect(189,38,2,3);
-      ctx.fillStyle='#ff6020'; ctx.fillRect(185,37,2,1); ctx.fillRect(189,37,2,1);
-      ctx.fillStyle='#2a1810'; ctx.fillRect(186,42,4,5);
-    });
+      // Foundation platform
+      ctx.fillStyle='#28303c'; ctx.fillRect(179,46,18,4);
+      ctx.fillStyle='#404c5c'; ctx.fillRect(179,46,4,4); // lit face
+      // Lower tower body
+      ctx.fillStyle='#384450'; ctx.fillRect(181,36,12,10);
+      ctx.fillStyle='#505c6c'; ctx.fillRect(181,36,3,10); // lit left
+      ctx.fillStyle='#263038'; ctx.fillRect(191,36,2,10); // shadow right
+      // Upper tower (narrower — gives clear 2-story read)
+      ctx.fillStyle='#404c58'; ctx.fillRect(183,30,8,6);
+      ctx.fillStyle='#586474'; ctx.fillRect(183,30,2,6); // lit left
+      ctx.fillStyle='#2e3840'; ctx.fillRect(189,30,2,6); // shadow right
+      // Battlements — 3 merlons, clear step silhouette
+      ctx.fillStyle='#384450';
+      ctx.fillRect(183,27,2,3); ctx.fillRect(186,27,3,3); ctx.fillRect(190,27,2,3);
+      ctx.fillStyle='#505c6c'; // merlon lit face
+      ctx.fillRect(183,27,1,3); ctx.fillRect(186,27,1,3); ctx.fillRect(190,27,1,3);
+      // Torch (right side, sticks above battlements)
+      ctx.fillStyle='#c04000'; ctx.fillRect(195,31,2,4);
+      ctx.fillStyle='#ff8820'; ctx.fillRect(195,30,2,2); // flame
+      ctx.fillStyle='#ffe040'; ctx.fillRect(196,29,1,2); // bright core
+      // Gate entrance (simplified — dark doorway slot, no arch detail at this scale)
+      ctx.fillStyle='#0c1218'; ctx.fillRect(185,41,4,9);
+      ctx.fillStyle='#181e28'; ctx.fillRect(185,41,1,9); // door lit edge
+    }, 0.76);
+
+    // Igottyou: signal post + campfire — tall pole, lantern, fire logs + flame
     lm(158,82,()=>{
-      ctx.fillStyle='#8a6a40'; ctx.fillRect(154,76,6,12);
-      ctx.fillStyle='#aa8a60'; ctx.fillRect(154,76,2,12); ctx.fillRect(152,74,10,3);
-      ctx.fillStyle='rgba(255,240,100,0.4)'; ctx.fillRect(153,71,8,4);
-      ctx.fillStyle='#ffe040'; ctx.fillRect(155,72,4,3);
-      ctx.fillStyle='#7a5020'; ctx.fillRect(165,85,5,2);
-      ctx.fillStyle='#c84000'; ctx.fillRect(166,83,3,2);
-      ctx.fillStyle='#ffa820'; ctx.fillRect(167,82,1,2);
-    });
+      // Signal post
+      ctx.fillStyle='#5a4014'; ctx.fillRect(163,70,3,17);
+      ctx.fillStyle='#7a5820'; ctx.fillRect(163,70,1,17); // post highlight
+      // Crossbar
+      ctx.fillStyle='#5a4014'; ctx.fillRect(158,74,13,2);
+      ctx.fillStyle='#7a5820'; ctx.fillRect(158,74,13,1); // crossbar highlight
+      // Lantern (box shape with glow center)
+      ctx.fillStyle='#3c2c0a'; ctx.fillRect(160,70,6,6); // lantern housing
+      ctx.fillStyle='#ffe060'; ctx.fillRect(161,71,4,4); // inner light
+      ctx.fillStyle='#ffcc20'; ctx.fillRect(162,72,2,2); // bright center
+      ctx.fillStyle='rgba(255,210,50,0.35)'; ctx.fillRect(159,69,8,8); // glow halo
+      ctx.fillStyle='#5a4010'; ctx.fillRect(160,70,1,6); ctx.fillRect(165,70,1,6); // frame
+      // Campfire logs (X cross pattern)
+      ctx.fillStyle='#4e2c0c'; ctx.fillRect(155,87,7,2); // log left
+      ctx.fillRect(159,87,7,2); // log right
+      ctx.fillStyle='#301806'; ctx.fillRect(157,89,5,2); // bottom log
+      // Flames (layered: base → mid → bright tip)
+      ctx.fillStyle='#b83800'; ctx.fillRect(157,85,2,3); ctx.fillRect(162,85,2,3);
+      ctx.fillStyle='#ff5820'; ctx.fillRect(158,83,4,3); ctx.fillRect(160,82,3,2);
+      ctx.fillStyle='#ffd020'; ctx.fillRect(159,82,2,2); ctx.fillRect(161,81,1,2); // bright tip
+    }, 0.78);
+
+    // ── 14b. DIRECTIONAL LIGHT (upper-left source — unifies scene, kills flat-lit look) ──
+    const dlight=ctx.createLinearGradient(0,0,W*0.7,H);
+    dlight.addColorStop(0,'rgba(255,248,220,0.04)');    // warm light upper-left
+    dlight.addColorStop(0.5,'rgba(255,248,220,0.005)');
+    dlight.addColorStop(1,'rgba(10,8,30,0.04)');         // cool shadow lower-right (halved)
+    ctx.fillStyle=dlight; ctx.fillRect(0,0,W,H);
+
+    // ── 15. FOREGROUND DEPTH ── (subtle — pixel art needs clean edges, not veil)
+    const fg=ctx.createLinearGradient(0,H-14,0,H); fg.addColorStop(0,'rgba(10,30,5,0)'); fg.addColorStop(1,'rgba(10,30,5,0.22)');
+    ctx.fillStyle=fg; ctx.fillRect(0,H-14,W,14);
+    // Side vignettes — very subtle, just hint of frame
+    const vL=ctx.createLinearGradient(0,0,12,0); vL.addColorStop(0,'rgba(0,0,0,0.10)'); vL.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=vL; ctx.fillRect(0,0,12,H);
+    const vR=ctx.createLinearGradient(W-12,0,W,0); vR.addColorStop(0,'rgba(0,0,0,0)'); vR.addColorStop(1,'rgba(0,0,0,0.10)');
+    ctx.fillStyle=vR; ctx.fillRect(W-12,0,12,H);
   }, []);
 
   const nextGallerySlide = () => {
@@ -717,7 +934,7 @@ const SummitWanderlustAdventure = () => {
         // ── Arrived ──
         const last = steps[steps.length - 1];
         const [ax,ay,,,,, dx,dy] = TRAIL_SEGS[last.segIdx];
-        setHikerPos({ x: (last.reverse ? ax : dx) / 240 * 100, y: (last.reverse ? ay : dy) / 150 * 100 });
+        setHikerPos({ x: (last.reverse ? ax : dx) / 240 * 100, y: (last.reverse ? ay : dy) / 150 * 100 + 3 });
         hikerTrailIdxRef.current = destIdx;
         setHikerWalking(false);
         setTravelingTo(null);
@@ -909,12 +1126,13 @@ const SummitWanderlustAdventure = () => {
       </section>
 
       {/* ───── APPS TRAIL MAP ───── */}
-      <section id="chapter-1" ref={mapSectionRef} className="relative">
+      <section id="chapter-1" ref={mapSectionRef} className="relative py-16 px-6">
+        <div className="max-w-6xl mx-auto">
         <div
           id="apps-title"
           ref={el => observerRefs.current[0] = el}
-          className="relative w-full overflow-hidden"
-          style={{ height: '100vh', minHeight: 620, background: '#264814' }}
+          className="relative w-full overflow-hidden rounded-xl"
+          style={{ height: 560, background: '#264814', boxShadow: '0 8px 48px rgba(0,0,0,0.6)' }}
         >
           {/* Canvas terrain */}
           <canvas ref={mapCanvasRef} width={240} height={150}
@@ -1065,15 +1283,15 @@ const SummitWanderlustAdventure = () => {
           <div ref={hikerDivRef} className="absolute z-30 pointer-events-none" style={{
             left:`${hikerPos.x}%`, top:`${hikerPos.y}%`,
             transform:'translate(-50%, -100%)',
-            filter:'drop-shadow(0 3px 8px rgba(0,0,0,0.95))',
+            filter:'drop-shadow(0 2px 3px rgba(0,0,0,0.85)) drop-shadow(0 1px 1px rgba(0,0,0,0.6))',
           }}>
             <PixelChar frame={walkFrame} />
             {/* Ground shadow */}
             <div style={{
               position:'absolute', bottom:-3, left:'50%',
               transform:'translateX(-50%)',
-              width:22, height:5, borderRadius:'50%',
-              background:'rgba(0,0,0,0.38)', filter:'blur(2px)',
+              width:28, height:7, borderRadius:'50%',
+              background:'rgba(0,0,0,0.50)', filter:'blur(2.5px)',
             }}/>
           </div>
 
@@ -1156,7 +1374,7 @@ const SummitWanderlustAdventure = () => {
                   fontFamily: 'monospace',
                   fontSize: isSelected ? '9px' : '6px',
                   fontWeight: isSelected ? 'bold' : 'normal',
-                  color: isSelected ? '#fff' : isHovered ? `rgba(${app.glow},0.9)` : `rgba(${app.glow},${isVisited ? '0.45' : '0.28'})`,
+                  color: isSelected ? '#fff' : isHovered ? `rgba(${app.glow},0.9)` : `rgba(${app.glow},${isVisited ? '0.72' : '0.55'})`,
                   textTransform: 'uppercase',
                   letterSpacing: isSelected ? '0.1em' : '0.06em',
                   whiteSpace: 'nowrap',
@@ -1236,6 +1454,7 @@ const SummitWanderlustAdventure = () => {
               </>)}
             </div>
           )}
+        </div>
         </div>
 
         {/* ── Apps Coverflow ── */}
