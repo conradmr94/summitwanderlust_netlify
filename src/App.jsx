@@ -15,12 +15,12 @@ import Motive from './Motive';
 import MotivePrivacyPolicy from './MotivePrivacyPolicy';
 import IGotYou from './IGotYou';
 
-// ── Pixel art hiker character ──────────────────────────────────────────────
+// ── Pixel art hiker character — 4-frame walk cycle ─────────────────────────
 const PixelChar = ({ frame = 0 }) => {
   const hat   = '#4a3218';
   const face  = '#f2c18a';
   const eye   = '#18100a';
-  const J     = '#1e6640'; // jacket
+  const J     = '#1e6640';
   const pack  = '#7a5c10';
   const leg   = '#1c3a7a';
   const boot  = '#2a1a08';
@@ -30,35 +30,39 @@ const PixelChar = ({ frame = 0 }) => {
       viewBox="0 0 8 12"
       style={{ imageRendering: 'pixelated', shapeRendering: 'crispEdges', display: 'block' }}
     >
-      {/* Hat */}
       <rect x="2" y="0" width="4" height="1" fill={hat}/>
       <rect x="1" y="1" width="6" height="1" fill={hat}/>
-      {/* Face */}
       <rect x="2" y="2" width="4" height="3" fill={face}/>
       <rect x="2" y="3" width="1" height="1" fill={eye}/>
       <rect x="5" y="3" width="1" height="1" fill={eye}/>
-      {/* Left arm */}
       <rect x="0" y="5" width="1" height="2" fill={J}/>
-      {/* Jacket */}
       <rect x="1" y="5" width="5" height="2" fill={J}/>
-      {/* Backpack */}
       <rect x="6" y="5" width="2" height="2" fill={pack}/>
-      {/* Legs — 2 walk frames */}
-      {frame === 0 ? (
-        <>
-          <rect x="2" y="7" width="2" height="3" fill={leg}/>
-          <rect x="4" y="7" width="2" height="3" fill={leg}/>
-          <rect x="2" y="10" width="2" height="1" fill={boot}/>
-          <rect x="4" y="10" width="2" height="1" fill={boot}/>
-        </>
-      ) : (
-        <>
-          <rect x="1" y="7" width="2" height="4" fill={leg}/>
-          <rect x="1" y="10" width="3" height="1" fill={boot}/>
-          <rect x="4" y="8" width="2" height="2" fill={leg}/>
-          <rect x="3" y="10" width="3" height="1" fill={boot}/>
-        </>
-      )}
+      {/* Legs — 4-frame walk: neutral → left-step → neutral-dip → right-step */}
+      {frame === 0 && (<>
+        <rect x="2" y="7" width="2" height="3" fill={leg}/>
+        <rect x="4" y="7" width="2" height="3" fill={leg}/>
+        <rect x="2" y="10" width="2" height="1" fill={boot}/>
+        <rect x="4" y="10" width="2" height="1" fill={boot}/>
+      </>)}
+      {frame === 1 && (<>
+        <rect x="1" y="7" width="2" height="4" fill={leg}/>
+        <rect x="1" y="10" width="3" height="1" fill={boot}/>
+        <rect x="4" y="8" width="2" height="2" fill={leg}/>
+        <rect x="3" y="10" width="3" height="1" fill={boot}/>
+      </>)}
+      {frame === 2 && (<>
+        <rect x="2" y="7" width="2" height="3" fill={leg}/>
+        <rect x="4" y="7" width="2" height="3" fill={leg}/>
+        <rect x="2" y="9" width="2" height="2" fill={boot}/>
+        <rect x="4" y="9" width="2" height="2" fill={boot}/>
+      </>)}
+      {frame === 3 && (<>
+        <rect x="5" y="7" width="2" height="4" fill={leg}/>
+        <rect x="4" y="10" width="3" height="1" fill={boot}/>
+        <rect x="2" y="8" width="2" height="2" fill={leg}/>
+        <rect x="2" y="10" width="3" height="1" fill={boot}/>
+      </>)}
     </svg>
   );
 };
@@ -110,10 +114,15 @@ const SummitWanderlustAdventure = () => {
   const [showQuestLog, setShowQuestLog] = useState(false);
   const [hikerFacing, setHikerFacing] = useState(1);      // 1 = right, -1 = left
   const [hoveredNode, setHoveredNode] = useState(null);
-  const hikerTrailIdxRef = useRef(0);   // which trail node hiker is at (0=start)
+  const [travelingTo, setTravelingTo] = useState(null);   // app object while walking
+  const [arrivedCamp, setArrivedCamp] = useState(null);   // appId briefly on arrival
+  const hikerTrailIdxRef = useRef(0);
   const hikerAnimRef = useRef(null);
   const hikerDivRef = useRef(null);
   const mapSectionRef = useRef(null);
+  const dustContainerRef = useRef(null);
+  const trailPathRef = useRef(null);
+  const frameCountRef = useRef(0);
   const [mapVisible, setMapVisible] = useState(false);
 
   const galleryImages = [
@@ -239,7 +248,7 @@ const SummitWanderlustAdventure = () => {
 
   useEffect(() => {
     if (!hikerWalking) { setWalkFrame(0); return; }
-    const id = setInterval(() => setWalkFrame(f => f === 0 ? 1 : 0), 220);
+    const id = setInterval(() => setWalkFrame(f => (f + 1) % 4), 170);
     return () => clearInterval(id);
   }, [hikerWalking]);
 
@@ -627,33 +636,59 @@ const SummitWanderlustAdventure = () => {
     const destIdx = NODE_IDX[appId];
     if (destIdx === undefined) return;
     const fromIdx = hikerTrailIdxRef.current;
-    if (fromIdx === destIdx) return;
+    if (fromIdx === destIdx) {
+      // Already here — just open panel
+      setMapSelectedApp(apps.find(a => a.id === appId) || null);
+      return;
+    }
 
     if (hikerAnimRef.current) cancelAnimationFrame(hikerAnimRef.current);
+    const destApp = apps.find(a => a.id === appId) || null;
     setHikerWalking(true);
     setMapSelectedApp(null);
+    setTravelingTo(destApp);
+    frameCountRef.current = 0;
 
-    // Build ordered list of bezier segments to traverse
     const dir = destIdx > fromIdx ? 1 : -1;
     const steps = [];
     for (let i = fromIdx; i !== destIdx; i += dir) {
       steps.push({ segIdx: dir > 0 ? i : i - 1, reverse: dir < 0 });
     }
 
+    // Draw full remaining path on the SVG overlay
+    const updateTrailSVG = (si) => {
+      if (!trailPathRef.current) return;
+      if (si >= steps.length) { trailPathRef.current.setAttribute('d', ''); return; }
+      const { segIdx: s0, reverse: r0 } = steps[si];
+      const seg0 = TRAIL_SEGS[s0];
+      let d = `M ${r0 ? seg0[6] : seg0[0]} ${r0 ? seg0[7] : seg0[1]}`;
+      for (let ri = si; ri < steps.length; ri++) {
+        const { segIdx: rsi, reverse: rrev } = steps[ri];
+        const [sa,sb,sc,sd,se,sf,sg,sh] = TRAIL_SEGS[rsi];
+        d += rrev ? ` C ${se} ${sf} ${sc} ${sd} ${sa} ${sb}`
+                  : ` C ${sc} ${sd} ${se} ${sf} ${sg} ${sh}`;
+      }
+      trailPathRef.current.setAttribute('d', d);
+    };
+
     let stepIdx = 0, t = 0;
-    const SPEED = 0.06;
+    const SPEED = 0.018;   // cozy walking pace (~55 frames/seg ≈ 0.9s/seg)
+    let lastStepIdx = -1;
 
     const animate = () => {
       if (stepIdx >= steps.length) {
-        // Arrived — sync state
-        const [ax,ay,,,,, dx,dy] = TRAIL_SEGS[steps[steps.length-1].segIdx];
-        const endX = steps[steps.length-1].reverse ? ax/240*100 : dx/240*100;
-        const endY = steps[steps.length-1].reverse ? ay/150*100 : dy/150*100;
-        setHikerPos({ x: endX, y: endY });
+        // ── Arrived ──
+        const last = steps[steps.length - 1];
+        const [ax,ay,,,,, dx,dy] = TRAIL_SEGS[last.segIdx];
+        setHikerPos({ x: (last.reverse ? ax : dx) / 240 * 100, y: (last.reverse ? ay : dy) / 150 * 100 });
         hikerTrailIdxRef.current = destIdx;
         setHikerWalking(false);
-        setMapSelectedApp(apps.find(a => a.id === appId) || null);
+        setTravelingTo(null);
+        setMapSelectedApp(destApp);
         setVisitedCamps(prev => new Set(prev).add(appId));
+        setArrivedCamp(appId);
+        setTimeout(() => setArrivedCamp(null), 750);
+        if (trailPathRef.current) trailPathRef.current.setAttribute('d', '');
         return;
       }
 
@@ -662,20 +697,32 @@ const SummitWanderlustAdventure = () => {
       const et = reverse ? 1 - t : t;
       const [px, py] = bzP(et, ax,ay, bx,by, cx,cy, dx,dy);
 
-      // Tangent for facing direction
-      const m = 1-et;
-      const tx = 3*m*m*(bx-ax)+6*m*et*(cx-bx)+3*et*et*(dx-cx);
+      const m = 1 - et;
+      const tx = 3*m*m*(bx-ax) + 6*m*et*(cx-bx) + 3*et*et*(dx-cx);
       const facing = (reverse ? tx > 0 : tx < 0) ? -1 : 1;
+      const xp = px / 240 * 100, yp = py / 150 * 100;
+      const yBob = Math.sin(t * Math.PI * 10) * 1.2;
 
-      // Update DOM directly (no React re-render per frame)
       if (hikerDivRef.current) {
-        const xp = px/240*100, yp = py/150*100;
-        const yBob = Math.sin(t * Math.PI * 6) * 1.5;
         hikerDivRef.current.style.left = `${xp}%`;
         hikerDivRef.current.style.top = `${yp}%`;
         hikerDivRef.current.style.transform = `translate(-50%, calc(-100% + ${yBob}px)) scaleX(${facing})`;
-        // keep facing in sync for idle bob after walk
         if (Math.abs(tx) > 0.1) setHikerFacing(facing);
+      }
+
+      // Update SVG trail on segment change
+      if (stepIdx !== lastStepIdx) {
+        lastStepIdx = stepIdx;
+        updateTrailSVG(stepIdx);
+      }
+
+      // Emit dust puff every 6 frames
+      frameCountRef.current++;
+      if (frameCountRef.current % 6 === 0 && dustContainerRef.current) {
+        const dust = document.createElement('div');
+        dust.style.cssText = `position:absolute;left:${xp}%;top:calc(${yp}% + 1px);width:5px;height:3px;border-radius:50%;background:rgba(155,115,50,0.52);transform:translate(-50%,0);animation:dustFade 0.52s ease-out forwards;pointer-events:none;z-index:22;`;
+        dustContainerRef.current.appendChild(dust);
+        setTimeout(() => { if (dust.parentNode) dust.remove(); }, 560);
       }
 
       t += SPEED;
@@ -683,6 +730,7 @@ const SummitWanderlustAdventure = () => {
       hikerAnimRef.current = requestAnimationFrame(animate);
     };
 
+    updateTrailSVG(0);
     hikerAnimRef.current = requestAnimationFrame(animate);
   };
 
@@ -836,6 +884,27 @@ const SummitWanderlustAdventure = () => {
             className="absolute inset-0 w-full h-full pointer-events-none"
             style={{ imageRendering: 'pixelated' }}
           />
+
+          {/* Active trail segment SVG overlay */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 240 150" preserveAspectRatio="none"
+            style={{ zIndex: 12 }}>
+            <defs>
+              <filter id="trailGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1.2" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <path ref={trailPathRef} d="" fill="none"
+              stroke="rgba(255,220,60,0.55)" strokeWidth="1.8"
+              strokeLinecap="round" strokeLinejoin="round"
+              filter="url(#trailGlow)"
+            />
+          </svg>
+
+          {/* Dust particle container */}
+          <div ref={dustContainerRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 22 }} />
+
           {/* Edge vignette */}
           <div className="absolute inset-0 pointer-events-none z-10"
             style={{ background: 'radial-gradient(ellipse at 50% 36%, transparent 30%, rgba(0,0,0,0.44) 100%)' }}
@@ -994,8 +1063,9 @@ const SummitWanderlustAdventure = () => {
                   borderRadius: 3,
                   display:'flex', alignItems:'center', justifyContent:'center',
                   boxShadow: isSelected ? `0 0 14px rgba(${app.glow},0.8), 0 0 4px rgba(${app.glow},0.4)` : isHovered ? `0 0 8px rgba(${app.glow},0.5)` : 'none',
-                  transition:'all 0.15s',
-                  transform: isSelected ? 'scale(1.15)' : isHovered ? 'scale(1.08)' : 'scale(1)',
+                  transition: arrivedCamp === app.id ? 'none' : 'all 0.15s',
+                  transform: isSelected && arrivedCamp !== app.id ? 'scale(1.15)' : isHovered && arrivedCamp !== app.id ? 'scale(1.08)' : 'scale(1)',
+                  animation: arrivedCamp === app.id ? 'arrivalBounce 0.75s cubic-bezier(0.36,0.07,0.19,0.97) both' : 'none',
                 }}>
                   <Icon style={{ width:11, height:11, color: isSelected ? `rgb(${app.glow})` : `rgba(${app.glow},${isVisited ? '0.9' : '0.55'})` }}/>
                 </div>
@@ -1115,13 +1185,20 @@ const SummitWanderlustAdventure = () => {
           {/* ── Status bar (always visible, slim) ── */}
           {(!mapSelectedApp || hikerWalking) && (
             <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center px-5"
-              style={{ height:44, background:'rgba(0,0,0,0.82)', borderTop:'1px solid rgba(255,255,255,0.12)' }}>
-              <span style={{ fontFamily:'monospace',fontSize:'10px',color:hikerWalking?'rgba(255,220,60,0.75)':'rgba(255,255,255,0.45)',letterSpacing:'0.07em' }}>
-                {hikerWalking ? '▶  Traveling...' : '▲  Click a camp to explore'}
-              </span>
-              {visitedCamps.size > 0 && (
-                <span style={{ marginLeft:'auto',fontFamily:'monospace',fontSize:'9px',color:'rgba(255,255,255,0.3)',letterSpacing:'0.14em' }}>{visitedCamps.size}/6 camps visited</span>
-              )}
+              style={{ height:44, background:'rgba(0,0,0,0.82)', borderTop: hikerWalking && travelingTo ? `1px solid rgba(${travelingTo.glow},0.35)` : '1px solid rgba(255,255,255,0.12)' }}>
+              {hikerWalking && travelingTo ? (<>
+                <div style={{ width:7, height:7, borderRadius:'50%', background:`rgb(${travelingTo.glow})`, animation:'beaconPulse 0.9s ease-in-out infinite', marginRight:10, flexShrink:0 }}/>
+                <span style={{ fontFamily:'monospace', fontSize:'8px', letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.3)', marginRight:6 }}>Traveling to</span>
+                <span style={{ fontFamily:'monospace', fontSize:'10px', fontWeight:'bold', letterSpacing:'0.1em', textTransform:'uppercase', color:`rgba(${travelingTo.glow},0.9)` }}>{travelingTo.name}</span>
+                <span style={{ fontFamily:'monospace', fontSize:'8px', color:'rgba(255,255,255,0.18)', marginLeft:'auto', letterSpacing:'0.12em' }}>{visitedCamps.size}/6 visited</span>
+              </>) : (<>
+                <span style={{ fontFamily:'monospace', fontSize:'10px', color:'rgba(255,255,255,0.45)', letterSpacing:'0.07em' }}>
+                  ▲  Click a camp to explore
+                </span>
+                {visitedCamps.size > 0 && (
+                  <span style={{ marginLeft:'auto', fontFamily:'monospace', fontSize:'9px', color:'rgba(255,255,255,0.3)', letterSpacing:'0.14em' }}>{visitedCamps.size}/6 camps visited</span>
+                )}
+              </>)}
             </div>
           )}
         </div>
