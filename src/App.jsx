@@ -13,7 +13,9 @@ import Lovocado from './Lovocado';
 import LovocadoPrivacyPolicy from './LovocadoPrivacyPolicy';
 import Motive from './Motive';
 import MotivePrivacyPolicy from './MotivePrivacyPolicy';
-import IGotYou from './IGotYou';
+import AngelWithYou from './AngelWithYou';
+import AngelWithYouPrivacy from './AngelWithYouPrivacy';
+import AngelWithYouTerms from './AngelWithYouTerms';
 
 // ── Pixel art hiker character — 4-frame walk cycle ─────────────────────────
 const PixelChar = ({ frame = 0 }) => {
@@ -839,7 +841,7 @@ const SummitWanderlustAdventure = () => {
     },
     {
       id: 'igottyou',
-      name: 'I Got You',
+      name: 'Angel With You',
       tagline: 'Personal safety companion',
       description: 'Voice triggers, back taps, fake calls, stealth recording, and auto-alerts—quietly waiting in your pocket when you need them most.',
       gradient: 'from-rose-900 via-red-950 to-stone-950',
@@ -853,7 +855,7 @@ const SummitWanderlustAdventure = () => {
         { text: 'Fake Call to Escape Situations', icon: Play },
         { text: 'Stealth Video Recording', icon: Camera },
       ],
-      cta: { label: 'Learn More', action: () => navigate('/i-got-you'), style: 'bg-gradient-to-r from-rose-800 to-purple-900 hover:from-rose-700 hover:to-purple-800 border-rose-600/30' },
+      cta: { label: 'Learn More', action: () => navigate('/angel-with-you'), style: 'bg-gradient-to-r from-rose-800 to-purple-900 hover:from-rose-700 hover:to-purple-800 border-rose-600/30' },
     },
     {
       id: 'lovocado',
@@ -1973,7 +1975,9 @@ const App = () => {
       <Route path="/lovocado/privacy-policy" element={<LovocadoPrivacyPolicy />} />
       <Route path="/motive" element={<Motive />} />
       <Route path="/motive/privacy-policy" element={<MotivePrivacyPolicy />} />
-      <Route path="/i-got-you" element={<IGotYou />} />
+      <Route path="/angel-with-you" element={<AngelWithYou />} />
+      <Route path="/angel-with-you/privacy" element={<AngelWithYouPrivacy />} />
+      <Route path="/angel-with-you/terms" element={<AngelWithYouTerms />} />
     </Routes>
   );
 };

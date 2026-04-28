@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Zap, Home, Bell, CreditCard, Settings } from 'lucide-react';
+import { ArrowLeft, Zap, Home, Bell, CreditCard, Settings, Mail, Send, Shield } from 'lucide-react';
 
 const screenshots = [
   {
@@ -41,6 +41,9 @@ const Motive = () => {
   const navigate = useNavigate();
   const [visibleCards, setVisibleCards] = useState(new Set());
   const [heroVisible, setHeroVisible] = useState(false);
+  const [formTitle, setFormTitle] = useState('');
+  const [formMessage, setFormMessage] = useState('');
+  const [submitStatus, setSubmitStatus] = useState(null);
   const cardRefs = useRef([]);
 
   useEffect(() => {
@@ -63,6 +66,17 @@ const Motive = () => {
     cardRefs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
   }, []);
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(formTitle || 'Contact from Motive');
+    const body = encodeURIComponent(formMessage);
+    window.location.href = `mailto:admin@summitwanderlust.com?subject=${subject}&body=${body}`;
+    setSubmitStatus('success');
+    setFormTitle('');
+    setFormMessage('');
+    setTimeout(() => setSubmitStatus(null), 3000);
+  };
 
   return (
     <div className="min-h-screen bg-[#f5f5fa] relative overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -205,6 +219,73 @@ const Motive = () => {
               Your motivation, always within reach.
             </p>
             <p className="text-stone-400 text-sm">Available soon on iOS</p>
+          </div>
+        </div>
+
+        {/* Contact Form */}
+        <div className="mt-32 max-w-2xl mx-auto">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-stone-200">
+            <div className="flex items-center gap-3 mb-6">
+              <Mail className="w-6 h-6 text-amber-500" />
+              <h2 className="text-2xl font-semibold text-stone-900">Get in Touch</h2>
+            </div>
+
+            <form onSubmit={handleFormSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="title" className="block text-sm font-medium text-stone-700 mb-2">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all bg-white"
+                  placeholder="Enter message title"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-stone-700 mb-2">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  value={formMessage}
+                  onChange={(e) => setFormMessage(e.target.value)}
+                  rows={6}
+                  className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all resize-none bg-white"
+                  placeholder="Enter your message..."
+                  required
+                />
+              </div>
+
+              {submitStatus === 'success' && (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">
+                  Your email client should open shortly with the message prepared.
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl"
+              >
+                <Send className="w-5 h-5" />
+                <span>Open Email to admin@summitwanderlust.com</span>
+              </button>
+            </form>
+
+            <div className="mt-6 pt-6 border-t border-stone-200">
+              <a
+                href="/motive/privacy-policy"
+                onClick={(e) => { e.preventDefault(); navigate('/motive/privacy-policy'); }}
+                className="text-sm text-stone-600 hover:text-amber-600 transition-colors inline-flex items-center gap-1"
+              >
+                <Shield className="w-4 h-4" />
+                <span>Privacy Policy</span>
+              </a>
+            </div>
           </div>
         </div>
 
