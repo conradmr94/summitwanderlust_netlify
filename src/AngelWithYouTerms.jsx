@@ -115,6 +115,15 @@ const HR = () => (
   />
 );
 
+const A = ({ href, children }) => (
+  <a
+    href={href}
+    style={{ color: C.accent, textDecoration: 'underline' }}
+  >
+    {children}
+  </a>
+);
+
 const AngelWithYouTerms = () => {
   const navigate = useNavigate();
 
@@ -187,8 +196,8 @@ const AngelWithYouTerms = () => {
           back-of-phone tap gestures, shake detection, and a check-in timer.
         </P>
         <P>
-          The App runs entirely on your device. It has no servers, no accounts, and no backend
-          service. See the Privacy Policy for details.
+          To use the App you must create an account and maintain an active subscription, both as
+          described below.
         </P>
 
         <H2 num="02">Eligibility</H2>
@@ -196,6 +205,77 @@ const AngelWithYouTerms = () => {
           You must be at least 17 years old to use the App, and you must be legally capable of
           entering into a binding agreement under the laws of your jurisdiction. By using the App you
           represent that you meet these requirements.
+        </P>
+
+        <H2 num="03">Accounts</H2>
+        <P>
+          The App requires you to sign in. Account creation and authentication are handled by
+          Firebase Authentication, a service operated by Google. You can sign in with email and
+          password, with Sign in with Apple, or (when enabled) with Sign in with Google. By creating
+          an account you agree that:
+        </P>
+        <UL>
+          <LI>The information you provide is accurate</LI>
+          <LI>You will not share your credentials with anyone else</LI>
+          <LI>You are responsible for activity that occurs under your account</LI>
+          <LI>You will notify us immediately if you suspect unauthorized use of your account</LI>
+        </UL>
+        <P>
+          You can delete your account at any time from inside the App (Settings → Account → Delete
+          Account). Deleting your account ends your access to the App and removes your record from
+          Firebase Authentication. Your active subscription, if any, will continue to bill until you
+          cancel it through the App Store as described in Section 4. Deleting your account does not
+          automatically cancel your subscription.
+        </P>
+        <P>
+          We may suspend or terminate your account if you breach these Terms, if your subscription
+          lapses, or if required by law.
+        </P>
+
+        <H2 num="04">Subscription and billing</H2>
+        <P>
+          Access to the App requires an active subscription. We currently offer two subscription
+          tiers, sold and managed by Apple through the App Store:
+        </P>
+        <UL>
+          <LI>
+            <strong>Monthly subscription</strong>, billed every month
+          </LI>
+          <LI>
+            <strong>Annual subscription</strong>, billed once per year
+          </LI>
+        </UL>
+        <P>
+          Pricing for each tier is shown in the App Store and inside the App at the point of
+          purchase, in your local currency.
+        </P>
+        <P>
+          <strong>Auto-renewal.</strong> Subscriptions are auto-renewing. Payment is charged to your
+          Apple ID at confirmation of purchase. Your subscription automatically renews at the same
+          price and for the same period unless you cancel auto-renewal at least 24 hours before the
+          end of the current period. Your account will be charged for renewal within 24 hours prior
+          to the end of the current period.
+        </P>
+        <P>
+          <strong>Managing and cancelling.</strong> You can manage your subscription, change tiers,
+          or turn off auto-renewal at any time by going to <strong>Settings → [your name] →
+          Subscriptions</strong> on your iPhone. Cancelling auto-renewal stops future charges; it
+          does not refund the current period. After you cancel, you continue to have access to the
+          App until the end of the period you have already paid for.
+        </P>
+        <P>
+          <strong>Refunds.</strong> All purchases are made through Apple. Refund requests are handled
+          by Apple in accordance with Apple's refund policies. We do not process refunds directly.
+        </P>
+        <P>
+          <strong>Free trials and promotional pricing</strong>, if offered, are described at the
+          point of purchase. If you cancel before the end of a free trial, you will not be charged.
+          If you do not cancel, you will be charged at the standard rate when the trial ends.
+        </P>
+        <P>
+          <strong>Price changes.</strong> If the price of your subscription changes, Apple will
+          notify you and seek your consent to the new price before continuing to bill you, in
+          accordance with Apple's policies.
         </P>
 
         <div
@@ -206,7 +286,7 @@ const AngelWithYouTerms = () => {
           }}
         >
           <Mono color={C.accentDeep} style={{ marginBottom: '0.5rem' }}>
-            03 · READ THIS CAREFULLY
+            05 · READ THIS CAREFULLY
           </Mono>
           <h2
             style={{
@@ -241,13 +321,13 @@ const AngelWithYouTerms = () => {
               factors entirely outside our control.
             </LI>
             <LI>
-              Voice trigger detection depends on Apple's on-device speech recognition. It can fail to
-              recognize your trigger words — particularly in noisy environments, when the phone is
+              Voice trigger detection depends on Apple's on-device speech recognition. It can fail
+              to recognize your trigger words, particularly in noisy environments, when the phone is
               muffled, or when battery saver modes restrict background processing.
             </LI>
             <LI>
               Tap and shake detection depends on the iPhone's accelerometer and on iOS's willingness
-              to keep the app running. Either may fail.
+              to keep the App running. Either may fail.
             </LI>
             <LI>
               GPS location depends on satellite reception, which can be poor or unavailable indoors,
@@ -256,6 +336,11 @@ const AngelWithYouTerms = () => {
             <LI>
               Sending an emergency SMS opens the iOS Messages app and requires the message to be
               transmitted by your carrier. The App cannot send a message if you have no service.
+            </LI>
+            <LI>
+              Account-required features depend on Firebase Authentication being available. If
+              Firebase Authentication is unavailable for any reason, you may not be able to sign in
+              until service is restored. We do not control Firebase Authentication's uptime.
             </LI>
             <LI>
               The App requires you to have already configured emergency contacts and granted the
@@ -272,11 +357,12 @@ const AngelWithYouTerms = () => {
           </P>
         </div>
 
-        <H2 num="04">Permissions and your responsibilities</H2>
+        <H2 num="06">Permissions and your responsibilities</H2>
         <P>
-          To work, the App needs you to grant iOS permissions for the microphone, speech recognition,
-          camera, location, motion, and notifications. You are responsible for granting and
-          maintaining these permissions. You are also responsible for:
+          To work, the App needs you to grant iOS permissions for the microphone, speech
+          recognition, camera, location, motion, contacts, photo library write access, and
+          notifications. You are responsible for granting and maintaining these permissions. You are
+          also responsible for:
         </P>
         <UL>
           <LI>Keeping your emergency contacts accurate and up to date</LI>
@@ -285,21 +371,23 @@ const AngelWithYouTerms = () => {
           <LI>Testing the App's features periodically so you know what to expect when you need them</LI>
           <LI>Choosing trigger words that you are unlikely to say by accident</LI>
           <LI>Configuring the check-in timer at appropriate intervals for your situation</LI>
+          <LI>Keeping your account credentials secure</LI>
         </UL>
 
-        <H2 num="05">Recording laws are your responsibility</H2>
+        <H2 num="07">Recording laws are your responsibility</H2>
         <P>
-          The App can record audio and video. Laws regarding the recording of conversations, of other
-          people, and of public or private spaces vary widely by jurisdiction. In some places,
-          recording another person without their consent is a crime, even in self-defense situations.
+          The App can record audio and video. Laws regarding the recording of conversations, of
+          other people, and of public or private spaces vary widely by jurisdiction. In some places,
+          recording another person without their consent is a crime, even in self-defense
+          situations.
         </P>
         <P>
           You — not us — are responsible for understanding and complying with the recording laws of
-          the jurisdiction you are in. Use of the App's recording features in violation of applicable
-          law is a breach of these Terms and is solely your responsibility.
+          the jurisdiction you are in. Use of the App's recording features in violation of
+          applicable law is a breach of these Terms and is solely your responsibility.
         </P>
 
-        <H2 num="06">The siren</H2>
+        <H2 num="08">The siren</H2>
         <P>
           The siren feature plays a loud, alternating tone at maximum volume. It is intentionally
           designed to attract attention. Do not trigger the siren in environments where loud noise
@@ -309,18 +397,18 @@ const AngelWithYouTerms = () => {
           triggering it.
         </P>
 
-        <H2 num="07">The fake call</H2>
+        <H2 num="09">The fake call</H2>
         <P>
           The "fake call" feature simulates an incoming phone call to give you a pretext to leave a
           situation. It is a tool, not a deception platform. Do not use it to defraud, harass, or
           deceive anyone in a way that would be illegal where you are.
         </P>
 
-        <H2 num="08">SMS, phone, and carrier costs</H2>
+        <H2 num="10">SMS, phone, and carrier costs</H2>
         <P>
           When you trigger an SMS or phone call, the App hands off to your iPhone's Messages and
-          Phone apps, which use your cellular carrier. Standard carrier rates for SMS and voice calls
-          apply. The App does not control, subsidize, or refund those charges.
+          Phone apps, which use your cellular carrier. Standard carrier rates for SMS and voice
+          calls apply. The App does not control, subsidize, or refund those charges.
         </P>
         <P>
           Calls placed to 911 (or your local emergency number) by the App are placed in the same way
@@ -328,7 +416,7 @@ const AngelWithYouTerms = () => {
           to call in your jurisdiction.
         </P>
 
-        <H2 num="09">License</H2>
+        <H2 num="11">License</H2>
         <P>
           You are granted a limited, non-exclusive, non-transferable, revocable license to use the
           App on iOS devices that you own or control, in accordance with Apple's App Store Terms of
@@ -336,13 +424,15 @@ const AngelWithYouTerms = () => {
           permitted by law), or attempt to extract the source code of the App.
         </P>
 
-        <H2 num="10">Updates</H2>
+        <H2 num="12">Updates</H2>
         <P>
           We may release updates to the App from time to time. Some updates may add, modify, or
-          remove features. We are not obligated to maintain or support the App indefinitely.
+          remove features. We are not obligated to maintain or support the App indefinitely. If we
+          permanently discontinue the App, we will give you reasonable notice through the App or App
+          Store and stop billing renewals for any active subscriptions.
         </P>
 
-        <H2 num="11">Disclaimer of warranties</H2>
+        <H2 num="13">Disclaimer of warranties</H2>
         <PCaps>
           THE APP IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
           IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -351,16 +441,18 @@ const AngelWithYouTerms = () => {
         </PCaps>
         <PCaps>
           WE DO NOT WARRANT THAT THE APP WILL DETECT THREATS, PROTECT YOU FROM HARM, ALERT ANY THIRD
-          PARTY, RECORD ANY EVIDENCE, OR FUNCTION CORRECTLY IN ANY GIVEN SITUATION.
+          PARTY, RECORD ANY EVIDENCE, OR FUNCTION CORRECTLY IN ANY GIVEN SITUATION. WE DO NOT
+          WARRANT THAT FIREBASE AUTHENTICATION OR ANY OTHER THIRD-PARTY SERVICE THE APP RELIES ON
+          WILL BE AVAILABLE OR FREE OF ERROR.
         </PCaps>
 
-        <H2 num="12">Limitation of liability</H2>
+        <H2 num="14">Limitation of liability</H2>
         <PCaps>
           TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL THE DEVELOPER BE LIABLE FOR ANY
           INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY
           LOSS OF PROFITS, REVENUE, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF
-          OR RELATED TO YOUR USE OF (OR INABILITY TO USE) THE APP — INCLUDING, WITHOUT LIMITATION,
-          ANY HARM, INJURY, LOSS, OR DAMAGE THAT RESULTS FROM:
+          OR RELATED TO YOUR USE OF (OR INABILITY TO USE) THE APP, INCLUDING WITHOUT LIMITATION ANY
+          HARM, INJURY, LOSS, OR DAMAGE THAT RESULTS FROM:
         </PCaps>
         <UL>
           <LI>THE APP'S FAILURE TO DETECT A TRIGGER WORD, GESTURE, OR EVENT;</LI>
@@ -372,13 +464,14 @@ const AngelWithYouTerms = () => {
           <LI>ANY USE OR MISUSE OF AUDIO OR VIDEO RECORDINGS CREATED WITH THE APP;</LI>
           <LI>ANY USE OR MISUSE OF THE FAKE-CALL FEATURE;</LI>
           <LI>ANY HARM CAUSED BY THE SIREN'S VOLUME OR FREQUENCY;</LI>
-          <LI>LOSS OF, OR INABILITY TO ACCESS, RECORDINGS OR SETTINGS STORED ON YOUR DEVICE.</LI>
+          <LI>LOSS OF, OR INABILITY TO ACCESS, RECORDINGS OR SETTINGS STORED ON YOUR DEVICE;</LI>
+          <LI>ANY UNAVAILABILITY OF FIREBASE AUTHENTICATION OR ANY OTHER THIRD-PARTY SERVICE.</LI>
         </UL>
         <PCaps>
           TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE DEVELOPER'S TOTAL CUMULATIVE LIABILITY ARISING
           OUT OF OR RELATED TO THE APP IS LIMITED TO THE GREATER OF (A) THE AMOUNT YOU PAID FOR THE
-          APP IN THE 12 MONTHS PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (B) FIVE U.S. DOLLARS
-          ($5.00).
+          APP IN THE 12 MONTHS PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (B) FIVE U.S.
+          DOLLARS ($5.00).
         </PCaps>
         <P>
           Some jurisdictions do not allow the exclusion or limitation of certain warranties or
@@ -386,7 +479,7 @@ const AngelWithYouTerms = () => {
           liability is limited to the smallest extent permitted by law.
         </P>
 
-        <H2 num="13">Indemnification</H2>
+        <H2 num="15">Indemnification</H2>
         <P>
           You agree to defend, indemnify, and hold harmless the developer from and against any
           claims, damages, liabilities, and expenses (including reasonable attorneys' fees) arising
@@ -394,14 +487,15 @@ const AngelWithYouTerms = () => {
           (including recording laws), or your infringement of any third party's rights.
         </P>
 
-        <H2 num="14">Termination</H2>
+        <H2 num="16">Termination</H2>
         <P>
-          You may stop using the App at any time by uninstalling it. We may suspend or end your right
-          to use the App if you breach these Terms. Sections 3, 5, 11, 12, 13, and 16 survive
-          termination.
+          You may stop using the App at any time by uninstalling it. To stop being billed, you must
+          also cancel auto-renewal of your subscription as described in Section 4. We may suspend or
+          end your right to use the App if you breach these Terms or if your subscription lapses.
+          Sections 5, 7, 13, 14, 15, and 18 survive termination.
         </P>
 
-        <H2 num="15">Apple-specific terms</H2>
+        <H2 num="17">Apple-specific terms</H2>
         <P>
           You acknowledge that these Terms are between you and the developer of the App, not Apple,
           and that Apple is not responsible for the App or its content. Apple has no obligation to
@@ -409,12 +503,12 @@ const AngelWithYouTerms = () => {
           conform to any applicable warranty, you may notify Apple, and Apple will refund the
           purchase price (if any) for the App; to the maximum extent permitted by law, Apple has no
           other warranty obligation with respect to the App. Apple and Apple's subsidiaries are
-          third-party beneficiaries of these Terms and, upon your acceptance of these Terms, have the
-          right (and will be deemed to have accepted the right) to enforce these Terms against you as
-          a third-party beneficiary.
+          third-party beneficiaries of these Terms and, upon your acceptance of these Terms, have
+          the right (and will be deemed to have accepted the right) to enforce these Terms against
+          you as a third-party beneficiary.
         </P>
 
-        <H2 num="16">Governing law and disputes</H2>
+        <H2 num="18">Governing law and disputes</H2>
         <P>
           These Terms are governed by the laws of the jurisdiction in which the developer resides,
           without regard to conflict-of-law principles. Any dispute arising out of or related to
@@ -426,24 +520,18 @@ const AngelWithYouTerms = () => {
           be waived, nothing in these Terms is intended to override those rights.
         </P>
 
-        <H2 num="17">Changes to these Terms</H2>
+        <H2 num="19">Changes to these Terms</H2>
         <P>
           We may revise these Terms from time to time. The "Last updated" date at the top reflects
-          the most recent revision. Material changes will be noted in the App Store release notes for
-          the version that introduces them. Your continued use of the App after a revision
+          the most recent revision. Material changes will be noted in the App Store release notes
+          for the version that introduces them. Your continued use of the App after a revision
           constitutes acceptance of the revised Terms.
         </P>
 
-        <H2 num="18">Contact</H2>
+        <H2 num="20">Contact</H2>
         <P>
           For questions about these Terms, contact the developer at{' '}
-          <a
-            href="mailto:admin@summitwanderlust.com"
-            style={{ color: C.accent, textDecoration: 'underline' }}
-          >
-            admin@summitwanderlust.com
-          </a>
-          .
+          <A href="mailto:admin@summitwanderlust.com">admin@summitwanderlust.com</A>.
         </P>
       </article>
 

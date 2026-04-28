@@ -125,6 +125,16 @@ const Code = ({ children }) => (
   </code>
 );
 
+const A = ({ href, children, external = false }) => (
+  <a
+    href={href}
+    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    style={{ color: C.accent, textDecoration: 'underline' }}
+  >
+    {children}
+  </a>
+);
+
 const AngelWithYouPrivacy = () => {
   const navigate = useNavigate();
 
@@ -186,141 +196,147 @@ const AngelWithYouPrivacy = () => {
 
         <H2>The short version</H2>
         <P>
-          Angel With You does not have a server. We do not collect, transmit, store, or sell any of your
-          personal information. Everything the app does happens entirely on your iPhone.
+          Angel With You uses Firebase Authentication (a Google service) to manage your account. The
+          only personal information that leaves your device is what is needed to sign you in: your
+          email address, your display name (if you provide one), and an internal Firebase user ID.
+          Everything else the app does — listening for trigger words, recording audio and video,
+          reading your location, managing your emergency contacts, scheduling check-in timers —
+          happens entirely on your iPhone.
         </P>
         <P>
-          There are no user accounts. There is no analytics SDK. There is no advertising. There is no
-          telemetry. We — the people who built this app — cannot see any of your data, because none of
-          it ever leaves your device.
+          We do not run an analytics service. We do not run an ad network. We do not have third-party
+          trackers in this app. We do not sell your data to anyone.
         </P>
 
         <HR />
 
-        <H2>What data the app handles, and where it lives</H2>
+        <H2>What information leaves your device, and where it goes</H2>
+
+        <H3>Account information (Firebase Authentication)</H3>
         <P>
-          The app processes the following information <em>only on your device</em>:
+          To use the app you need an account. We use Firebase Authentication, a service operated by
+          Google, to handle accounts. When you create an account, sign in, reset your password, or
+          delete your account, the following information is sent to Google's Firebase servers:
+        </P>
+        <UL>
+          <LI>
+            The email address you sign up with (or the email address Apple shares when you use Sign
+            in with Apple, which may be Apple's private relay address rather than your real email if
+            you choose that option)
+          </LI>
+          <LI>The first name you provide during sign-up, used to greet you in the app</LI>
+          <LI>An internal Firebase user ID that identifies your account</LI>
+          <LI>Authentication tokens used to keep you signed in</LI>
+          <LI>
+            Sign-in and account-management events (sign-in, sign-out, password reset, account
+            deletion)
+          </LI>
+        </UL>
+        <P>
+          Firebase processes this data on Google Cloud infrastructure. Google's handling of this data
+          is governed by the{' '}
+          <A href="https://firebase.google.com/support/privacy" external>
+            Firebase Privacy and Security documentation
+          </A>{' '}
+          and Google's privacy policies. We do not store this data anywhere else.
+        </P>
+        <P>
+          We use Firebase Authentication for one purpose only: to verify it is you when you open the
+          app and to gate access to your subscription. We do not use Firebase Analytics, Firebase
+          Crashlytics, Firebase Cloud Messaging, Firebase Storage, Firestore, Realtime Database, or
+          any other Firebase product. We have not enabled Google Analytics for Firebase.
         </P>
 
-        <H3>Audio</H3>
-        <UL>
-          <LI>
-            The microphone is used while protection is active to listen for your trigger words
-            ("Help!", your custom safety word, your custom siren word, "Camera").
-          </LI>
-          <LI>
-            Speech recognition runs <em>on-device</em> using Apple's <Code>SFSpeechRecognizer</Code>{' '}
-            with <Code>requiresOnDeviceRecognition = true</Code>. No audio is sent to Apple, to us, or
-            to any other party for transcription.
-          </LI>
-          <LI>
-            Voice recordings you create (via double-tap, the safety word trigger, or the check-in
-            timer) are saved as audio files inside the app's private sandbox on your iPhone. Only you
-            can access them through the app.
-          </LI>
-        </UL>
+        <H3>Subscription information (Apple App Store)</H3>
+        <P>
+          The app requires an active subscription. Subscriptions are sold and managed by Apple
+          through the App Store, not by us. When you subscribe, Apple processes the transaction and
+          shares aggregated, anonymized purchase data with us through App Store Connect (for example,
+          "X subscriptions sold this week"). We do not receive your name, your billing address, or
+          your payment method. Apple's handling of subscription data is governed by Apple's privacy
+          policy.
+        </P>
 
-        <H3>Video</H3>
-        <UL>
-          <LI>
-            Stealth video recordings (triggered by saying "Camera") are captured using the back camera
-            with no on-screen preview. The resulting video files are saved inside the app's private
-            sandbox on your iPhone.
-          </LI>
-          <LI>Video is never streamed, uploaded, or transmitted anywhere.</LI>
-        </UL>
-
-        <H3>Location</H3>
-        <UL>
-          <LI>
-            Your GPS coordinates are read using Apple's CoreLocation framework while protection is
-            active.
-          </LI>
-          <LI>
-            Location is used for one purpose only: to include your coordinates and an Apple Maps link
-            in the SMS messages you send to your emergency contacts.
-          </LI>
-          <LI>
-            Location is not stored in a database, not logged, and not shared with anyone other than
-            the contacts you have chosen to text.
-          </LI>
-          <LI>
-            You can disable location sharing in Settings ("Include Location") at any time.
-          </LI>
-        </UL>
-
-        <H3>Motion</H3>
-        <UL>
-          <LI>
-            The accelerometer is read at 200 Hz via CoreMotion while protection is active in order to
-            detect back-of-phone taps and shake gestures.
-          </LI>
-          <LI>Motion data is processed in memory only. It is never stored or transmitted.</LI>
-        </UL>
-
-        <H3>Emergency contacts and settings</H3>
-        <UL>
-          <LI>
-            The names and phone numbers of the contacts you save, your custom safety word, your custom
-            siren word, your emergency message, your fake-call name, and your other settings are
-            stored locally in your iPhone's <Code>UserDefaults</Code> (the standard local settings
-            store for iOS apps).
-          </LI>
-          <LI>This information stays on your device. We never receive it.</LI>
-        </UL>
-
-        <H3>Notifications</H3>
-        <UL>
-          <LI>
-            Local notifications (for example, when your check-in timer is about to expire) are
-            scheduled and delivered locally by iOS. They are not sent through any push-notification
-            server.
-          </LI>
-        </UL>
+        <H3>SMS and phone calls</H3>
+        <P>
+          When you trigger an emergency, the app opens the iOS Messages app or the iOS Phone app to
+          actually send the SMS or place the call. Once iOS Messages or iOS Phone takes over, your
+          message and call go through your cellular carrier exactly as if you had typed and dialed
+          yourself. Those messages and calls do not pass through our servers or through Firebase.
+        </P>
 
         <HR />
 
-        <H2>When the app communicates with the outside world</H2>
+        <H2>What stays on your device</H2>
         <P>
-          The app itself makes <strong>zero network requests</strong>. It has no backend.
-        </P>
-        <P>
-          However, when you trigger an emergency action, the app hands off to standard iOS apps so
-          that messages and calls can actually reach your contacts:
+          The following data is processed and stored entirely on your iPhone, in the app's private
+          storage. It is never transmitted to us, to Google, or to anyone else:
         </P>
         <UL>
           <LI>
-            <strong>SMS:</strong> The app opens the system Messages app (using the <Code>sms:</Code>{' '}
-            URL scheme) with your contacts pre-filled and your emergency message pre-filled. The
-            actual sending of the text message is done by iOS Messages over your cellular carrier,
-            exactly as if you had typed and sent the message yourself.
+            <strong>Audio.</strong> Speech recognition for your trigger words (<Code>Help</Code>,
+            your safety word, your siren word, <Code>Camera</Code>) runs on-device using Apple's{' '}
+            <Code>SFSpeechRecognizer</Code> with <Code>requiresOnDeviceRecognition = true</Code>. No
+            audio is sent to Apple, Google, or any other party for transcription. Voice recordings
+            you create are saved as audio files in the app's private sandbox.
           </LI>
           <LI>
-            <strong>Phone calls:</strong> The app opens the system Phone app (using the{' '}
-            <Code>tel:</Code> URL scheme) to place calls to your primary contact or to 911. The call
-            is placed by iOS over your cellular carrier.
+            <strong>Video.</strong> Stealth video recordings are captured with no on-screen preview
+            and saved in the app's private sandbox or, if you have granted the permission, written to
+            your Photo Library on your device.
+          </LI>
+          <LI>
+            <strong>Location.</strong> Your GPS coordinates are read using Apple's CoreLocation
+            framework while protection is active. Location is included in the SMS messages you send
+            to your emergency contacts. It is not stored, logged, or transmitted to us or to Google.
+          </LI>
+          <LI>
+            <strong>Motion.</strong> Accelerometer data sampled at 200 Hz via CoreMotion is processed
+            in memory only to detect back-of-phone taps and shake gestures. It is never stored or
+            transmitted.
+          </LI>
+          <LI>
+            <strong>Emergency contacts and settings.</strong> The names and phone numbers of the
+            contacts you save, your custom safety word, your custom siren word, your emergency
+            message, your fake-call name, and your other settings are stored locally in your
+            iPhone's <Code>UserDefaults</Code>. They are not sent to Firebase or to anyone else.
+          </LI>
+          <LI>
+            <strong>Address book access.</strong> When you pick an emergency contact from your
+            iPhone contacts, the app reads your address book briefly via Apple's Contacts framework
+            to show you the picker. Only the name and phone number of the contact you select are
+            saved. The rest of your address book is not stored anywhere by the app and is not
+            transmitted.
           </LI>
         </UL>
-        <P>
-          What this means: once you hand off to Messages or Phone, your message and call are subject
-          to your <strong>carrier's</strong> privacy practices, and the records of those messages and
-          calls live on your phone and your carrier's network — not in our app. We never see them.
-        </P>
 
         <HR />
 
         <H2>What we do not do</H2>
         <P>We do not:</P>
         <UL>
-          <LI>Operate any servers that receive your data</LI>
-          <LI>Use any analytics, crash-reporting, or telemetry SDKs</LI>
-          <LI>Use any advertising SDKs or show ads</LI>
-          <LI>Sell, rent, or share any data with third parties</LI>
+          <LI>
+            Use Firebase Analytics, Firebase Crashlytics, Google Analytics, or any other analytics
+            service
+          </LI>
+          <LI>Use any advertising SDK or show ads</LI>
+          <LI>Use any third-party tracker</LI>
+          <LI>Sell, rent, or share data with third parties for their own purposes</LI>
           <LI>Track you across other apps or websites</LI>
-          <LI>Require an account, email address, or login</LI>
-          <LI>Use cookies (the app is not a website)</LI>
-          <LI>Use Apple's iCloud sync to back up recordings or settings</LI>
+          <LI>Use cookies or any web tracking technology</LI>
+          <LI>Sync your recordings, contacts, or settings to iCloud or any other cloud service</LI>
         </UL>
+
+        <HR />
+
+        <H2>Service providers we rely on</H2>
+        <P>
+          The only third party that processes data on our behalf is{' '}
+          <strong>Google (Firebase Authentication)</strong>, used solely for account management as
+          described above. If you sign in with Apple, Apple acts as the identity provider for that
+          sign-in flow. If you sign in with Google (when that option is enabled), Google acts as the
+          identity provider for that sign-in flow.
+        </P>
 
         <HR />
 
@@ -335,6 +351,11 @@ const AngelWithYouPrivacy = () => {
             ['Camera', 'To record stealth video evidence'],
             ['Location (When In Use)', 'To include GPS coordinates in emergency SMS messages'],
             ['Motion & Fitness', 'To detect back-of-phone taps and shake gestures'],
+            ['Contacts', 'To let you pick emergency contacts from your address book'],
+            [
+              'Photo Library Add',
+              'To save evidence videos to your Photo Library so you can find them later',
+            ],
             ['Notifications', 'To alert you when your check-in timer is about to expire'],
           ].map(([perm, why], i, arr) => (
             <div
@@ -357,8 +378,22 @@ const AngelWithYouPrivacy = () => {
         </div>
         <P>
           You can revoke any of these permissions at any time in iOS Settings → Privacy &amp;
-          Security. Some app features will stop working without their corresponding permission, but
-          the rest of the app will continue to function.
+          Security. The app will continue to function for everything that does not depend on the
+          revoked permission.
+        </P>
+
+        <HR />
+
+        <H2>Account deletion and data deletion</H2>
+        <P>
+          You can delete your account from inside the app at any time (Settings → Account → Delete
+          Account). Deleting your account immediately removes your record from Firebase
+          Authentication. Local data (recordings, contacts, settings) is removed when you delete the
+          app from your device.
+        </P>
+        <P>
+          If you cannot reach the in-app delete button for any reason, you can also email the
+          developer at the support address listed on the App's App Store page and request deletion.
         </P>
 
         <HR />
@@ -366,47 +401,52 @@ const AngelWithYouPrivacy = () => {
         <H2>Children's privacy</H2>
         <P>
           The app is intended for users aged 17 and older. It is not designed for or directed at
-          children under 13. Because the app does not collect any personal information, no
-          information about children (or anyone else) is collected.
+          children under 13. We do not knowingly collect personal information from children under 13.
+          If you believe a child under 13 has created an account, contact the developer and we will
+          delete the account.
         </P>
 
         <HR />
 
-        <H2>Your control over your data</H2>
-        <P>Because all data lives on your device:</P>
+        <H2>Your rights</H2>
+        <P>
+          Depending on where you live (for example, in the EU under the GDPR or in California under
+          the CCPA), you may have rights to access, correct, delete, or export the personal
+          information that has been processed about you. Because the only personal information we
+          process is what Firebase Authentication holds for you (your email, your display name, and
+          your Firebase user ID), exercising these rights is straightforward:
+        </P>
         <UL>
           <LI>
-            To delete your emergency contacts, settings, or recordings, you can do so from inside the
-            app or by deleting the app entirely. Uninstalling the app removes everything it stored.
+            To <strong>access</strong> your information, sign into the app and view your profile.
           </LI>
           <LI>
-            There is nothing to "request a copy of" or "request deletion of" from us, because we
-            never had it.
+            To <strong>correct</strong> your email or display name, update them in the app.
           </LI>
-          <LI>There is no opt-out from data collection, because there is no data collection.</LI>
+          <LI>
+            To <strong>delete</strong> your information, use the Delete Account flow inside the app.
+          </LI>
+          <LI>
+            To <strong>export</strong> your information, contact the developer at the support
+            address listed on the App's App Store page.
+          </LI>
         </UL>
 
         <HR />
 
         <H2>Changes to this policy</H2>
         <P>
-          If we ever change how the app handles data, we will update this document and update the
-          "Last updated" date above. Material changes will also be noted in the App Store release
-          notes for the version that introduces them.
+          If we change how the app handles data, we will update this document and update the "Last
+          updated" date above. Material changes will also be noted in the App Store release notes
+          for the version that introduces them.
         </P>
 
         <HR />
 
         <H2>Contact</H2>
         <P>
-          If you have questions about this Privacy Policy, you can reach the developer at{' '}
-          <a
-            href="mailto:admin@summitwanderlust.com"
-            style={{ color: C.accent, textDecoration: 'underline' }}
-          >
-            admin@summitwanderlust.com
-          </a>
-          .
+          For questions about this Privacy Policy, contact the developer at{' '}
+          <A href="mailto:admin@summitwanderlust.com">admin@summitwanderlust.com</A>.
         </P>
       </article>
 
