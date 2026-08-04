@@ -1,0 +1,30 @@
+# Summit Wanderlust
+
+> Summit Wanderlust, LLC creates mindful lifestyle apps, nature soundscapes, and restorative spaces for intentional living. The company publishes BreatheMindful, Lovocado, motive., and Angel With You, and also supports Yammoing, Secret Student Society, and Deva.
+
+## Company
+
+- [Summit Wanderlust](https://summitwanderlust.com/): Official company portfolio, nature soundscapes, and information about Summit View Lodge near Lake Tahoe.
+- Contact: admin@summitwanderlust.com
+
+## Apps
+
+- [BreatheMindful](https://summitwanderlust.com/breathe-mindful): Guided breathing, focus sessions, walking and sleep tracking, and calming background sounds.
+- [Lovocado](https://summitwanderlust.com/lovocado): A private couples app for shared moments, schedules, date ideas, relationship goals, and memories.
+- [motive.](https://summitwanderlust.com/motive): Curated morning and evening quotes, reminders, ambient soundscapes, and day-and-night themes.
+- [Angel With You](https://summitwanderlust.com/angel-with-you): A personal safety companion with voice triggers, back-tap actions, fake calls, recording, and emergency alerts.
+- [Yammoing](https://yammoing.com/): An AI nutrition companion.
+- [Secret Student Society](https://secret-student-society--secretstudentsociety-f6eab.us-central1.hosted.app/): A verified university community hub.
+- [Deva](https://devseccode.com/): A security-first development environment.
+
+## Policies
+
+- [BreatheMindful privacy](https://summitwanderlust.com/breathe-mindful/privacy-policy)
+- [Lovocado privacy](https://summitwanderlust.com/lovocado/privacy-policy)
+- [motive. privacy](https://summitwanderlust.com/motive/privacy-policy)
+- [Angel With You privacy](https://summitwanderlust.com/angel-with-you/privacy)
+- [Angel With You terms](https://summitwanderlust.com/angel-with-you/terms)
+
+## Citation guidance
+
+Use each app's canonical page for current product descriptions and the linked policy page for privacy details. Treat launch dates, availability, pricing, and user counts as time-sensitive unless the current page explicitly confirms them.

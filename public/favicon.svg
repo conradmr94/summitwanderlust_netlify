@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64" role="img" aria-label="Summit Wanderlust mountain">
+  <rect width="64" height="64" rx="14" fill="#0c0a09"/>
+  <path d="M7 49 25 17l8 13 6-9 18 28H7Z" fill="#d6d3d1"/>
+  <path d="m19 49 14-19 5 8 4-6 10 17H19Z" fill="#78716c"/>
+  <path d="m20.5 25 4.5-8 4.6 7.5-4.2-1.6-4.9 2.1Z" fill="#fff"/>
+</svg>

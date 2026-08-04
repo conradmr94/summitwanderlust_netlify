@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Phone as PhoneIcon, PhoneOff, Send } from 'lucide-react';
 
 // Theme tokens — mirror of the SwiftUI Theme.swift in the iOS app.
@@ -1087,8 +1087,8 @@ const AngelWithYou = () => {
         rel="stylesheet"
       />
 
-      <button
-        onClick={() => navigate('/')}
+      <Link
+        to="/"
         aria-label="Back"
         className="fixed top-4 left-4 z-50 w-9 h-9 rounded-full flex items-center justify-center transition-opacity hover:opacity-100"
         style={{
@@ -1100,14 +1100,16 @@ const AngelWithYou = () => {
         }}
       >
         <ArrowLeft className="w-4 h-4" />
-      </button>
+      </Link>
 
-      <HeroSection />
-      <VoiceSection />
-      <HandsSection />
-      <ExitSection />
-      <StealthSection />
-      <ClosingSection />
+      <main>
+        <HeroSection />
+        <VoiceSection />
+        <HandsSection />
+        <ExitSection />
+        <StealthSection />
+        <ClosingSection />
+      </main>
     </div>
   );
 };

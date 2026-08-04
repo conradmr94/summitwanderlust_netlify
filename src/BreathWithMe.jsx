@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Wind, ArrowLeft, Clock, Bell, BellOff, X, Mail, Send, Shield } from 'lucide-react';
 
 const BreathWithMe = () => {
@@ -276,16 +276,32 @@ const BreathWithMe = () => {
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100 text-stone-900">
       {/* Top Navigation */}
       <div className="sticky top-0 z-20 p-6 bg-stone-50/80 backdrop-blur-sm">
-        <button
-          onClick={() => navigate('/')}
+        <Link
+          to="/"
           className="flex items-center gap-2 text-stone-600 hover:text-stone-900 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span className="text-sm font-medium">Back</span>
-        </button>
+        </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        <header className="max-w-3xl mx-auto text-center mb-16">
+          <p className="text-sm uppercase tracking-[0.24em] text-blue-600 mb-3">Mindful wellness for iOS</p>
+          <h1 className="text-5xl md:text-6xl font-light text-stone-900 mb-5">BreatheMindful</h1>
+          <p className="text-lg text-stone-600 leading-relaxed mb-7">
+            Guided breathing, walking and sleep tracking, Pomodoro focus sessions, and customizable background sounds in one calm space.
+          </p>
+          <a
+            href="https://apps.apple.com/us/app/breathemindful/id6757343368"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center rounded-full bg-blue-500 px-6 py-3 text-white font-medium hover:bg-blue-600 transition-colors"
+          >
+            Download on the App Store
+          </a>
+        </header>
+
         {/* iPhone Frame Section - Try It Out */}
         <div className="mb-16">
           <div className="flex flex-col items-center">
@@ -320,7 +336,7 @@ const BreathWithMe = () => {
                     <div className="flex-1 flex flex-col items-center justify-center pt-8 pb-4">
                       {!isBreathing && (
                         <div className="text-center mb-6 transition-opacity">
-                          <h1 className="text-3xl font-light text-stone-900 mb-1">Breathe</h1>
+                          <p className="text-3xl font-light text-stone-900 mb-1">Breathe</p>
                           <p className="text-sm text-stone-600">Find your calm</p>
                         </div>
                       )}
@@ -534,10 +550,10 @@ const BreathWithMe = () => {
             {/* Privacy Policy Link */}
             <div className="mt-6 pt-6 border-t border-stone-200">
               <a
-                href="/breathe-with-me/privacy-policy"
+                href="/breathe-mindful/privacy-policy"
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate('/breathe-with-me/privacy-policy');
+                  navigate('/breathe-mindful/privacy-policy');
                 }}
                 className="text-sm text-stone-600 hover:text-blue-600 transition-colors inline-flex items-center gap-1"
               >
@@ -547,7 +563,7 @@ const BreathWithMe = () => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Duration Picker Modal */}
       {showDurationPicker && (

@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run build:client && npm run build:ssr && NODE_ENV=production node scripts/prerender.mjs",
+    "build:client": "vite build",
+    "build:ssr": "NODE_ENV=production vite build --ssr src/entry-server.jsx --outDir .prerender --emptyOutDir",
     "preview": "vite preview"
   },
   "dependencies": {

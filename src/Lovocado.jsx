@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MapPin, Camera, Calendar, Users, Sparkles, Star, Map, Palette, Mail, Send, Shield } from 'lucide-react';
 
 const screenshots = [
   {
-    src: '/lovocado/login.png',
+    src: '/lovocado/login.avif',
     alt: 'Lovocado Login',
     label: 'Welcome',
     description: 'Sign in with Apple, Google, or email to get started.',
@@ -12,7 +12,7 @@ const screenshots = [
     accent: '#f472b6',
   },
   {
-    src: '/lovocado/for-you-today.png',
+    src: '/lovocado/for-you-today.avif',
     alt: 'For You - Today',
     label: 'For You',
     description: 'Track your anniversary, upcoming milestones, and daily prompts to stay connected.',
@@ -20,7 +20,7 @@ const screenshots = [
     accent: '#fb7185',
   },
   {
-    src: '/lovocado/for-you-moments.png',
+    src: '/lovocado/for-you-moments.avif',
     alt: 'For You - Moments',
     label: 'Moments',
     description: 'Capture and revisit your favorite memories together — from first dates to spontaneous road trips.',
@@ -28,7 +28,7 @@ const screenshots = [
     accent: '#f9a8d4',
   },
   {
-    src: '/lovocado/explore.png',
+    src: '/lovocado/explore.avif',
     alt: 'Explore',
     label: 'Explore',
     description: 'Discover date ideas for tonight. Dessert crawls, cozy cafes, park picnics — pick one and send it.',
@@ -36,7 +36,7 @@ const screenshots = [
     accent: '#ec4899',
   },
   {
-    src: '/lovocado/adventure.png',
+    src: '/lovocado/adventure.avif',
     alt: 'Adventure Map',
     label: 'Adventure',
     description: 'Pin your favorite places on the map. Plan trips, book spots, and browse new destinations together.',
@@ -44,7 +44,7 @@ const screenshots = [
     accent: '#06b6d4',
   },
   {
-    src: '/lovocado/profile.png',
+    src: '/lovocado/profile.avif',
     alt: 'Couple Profile',
     label: 'Profile',
     description: 'Your shared space — see your stats, milestones, and a year-in-review of your journey together.',
@@ -52,7 +52,7 @@ const screenshots = [
     accent: '#a78bfa',
   },
   {
-    src: '/lovocado/theme.png',
+    src: '/lovocado/theme.avif',
     alt: 'Theme Settings',
     label: 'Personalize',
     description: 'Make it yours. Set a custom background photo, adjust blur and darkness, and pick your color palette.',
@@ -117,13 +117,13 @@ const Lovocado = () => {
       </div>
 
       {/* Back button */}
-      <button
-        onClick={() => navigate('/')}
+      <Link
+        to="/"
         className="fixed top-6 left-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-stone-200/60 text-stone-600 hover:text-stone-900 hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md"
       >
         <ArrowLeft className="w-4 h-4" />
         <span className="text-sm font-medium">Back</span>
-      </button>
+      </Link>
 
       {/* Hero Section */}
       <header className="relative pt-28 pb-16 px-6 text-center">
@@ -197,8 +197,11 @@ const Lovocado = () => {
                       <img
                         src={shot.src}
                         alt={shot.alt}
+                        width="1206"
+                        height="2622"
                         className="w-full h-full object-cover object-top"
                         loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   </div>
@@ -242,7 +245,14 @@ const Lovocado = () => {
             >
               Your love story, beautifully kept.
             </p>
-            <p className="text-stone-400 text-sm">Available soon on iOS</p>
+            <a
+              href="https://apps.apple.com/app/id6757644902"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-pink-500 text-sm underline underline-offset-4 hover:text-pink-600"
+            >
+              Available on the App Store
+            </a>
           </div>
         </div>
 

@@ -164,12 +164,12 @@ const PrivacyPolicy = () => {
               </p>
               <p className="text-stone-700 leading-relaxed mt-2">
                 <a 
-                  href="https://summitwanderlust.com/breathe-with-me" 
+                  href="https://summitwanderlust.com/breathe-mindful"
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-700 underline"
                 >
-                  https://summitwanderlust.com/breathe-with-me
+                  https://summitwanderlust.com/breathe-mindful
                 </a>
               </p>
             </section>

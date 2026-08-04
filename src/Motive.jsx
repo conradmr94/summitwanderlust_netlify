@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Zap, Home, Bell, CreditCard, Settings, Mail, Send, Shield } from 'lucide-react';
 
 const screenshots = [
   {
-    src: '/motive/home.PNG',
+    src: '/motive/home.avif',
     alt: 'Home Dashboard',
     label: 'Home',
-    description: 'Your daily overview — see your goals, streaks, and what matters most at a glance.',
+    description: 'Open a quiet daily view with curated words and ambient visuals that adapt from morning to evening.',
     icon: Home,
     accent: '#f59e0b',
   },
   {
-    src: '/motive/alarm.PNG',
+    src: '/motive/alarm.avif',
     alt: 'Smart Reminders',
     label: 'Reminders',
-    description: 'Set smart alarms and nudges that keep you on track throughout the day.',
+    description: 'Choose personalized morning and evening notification windows for a gentle daily moment.',
     icon: Bell,
     accent: '#ef4444',
   },
   {
-    src: '/motive/payment.PNG',
+    src: '/motive/payment.avif',
     alt: 'Premium',
     label: 'Premium',
     description: 'Unlock the full experience with premium features designed to keep you motivated.',
@@ -28,7 +28,7 @@ const screenshots = [
     accent: '#10b981',
   },
   {
-    src: '/motive/settings.PNG',
+    src: '/motive/settings.avif',
     alt: 'Settings',
     label: 'Settings',
     description: 'Customize your experience — notifications, themes, and preferences, all in one place.',
@@ -93,13 +93,13 @@ const Motive = () => {
       </div>
 
       {/* Back button */}
-      <button
-        onClick={() => navigate('/')}
+      <Link
+        to="/"
         className="fixed top-6 left-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-stone-200/60 text-stone-600 hover:text-stone-900 hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md"
       >
         <ArrowLeft className="w-4 h-4" />
         <span className="text-sm font-medium">Back</span>
-      </button>
+      </Link>
 
       {/* Hero Section */}
       <header className="relative pt-28 pb-16 px-6 text-center">
@@ -123,10 +123,10 @@ const Motive = () => {
             motive
           </h1>
           <p className="text-lg md:text-xl text-stone-500 max-w-md mx-auto leading-relaxed mb-3">
-            Stay focused. Stay driven.
+            rest. wake. motivate.
           </p>
           <p className="text-sm text-stone-400 max-w-lg mx-auto leading-relaxed">
-            Build better habits, track your progress, and stay motivated every single day.
+            Curated morning and evening quotes, ambient soundscapes, and gentle reminders without social feeds or clutter.
           </p>
         </div>
 
@@ -173,8 +173,11 @@ const Motive = () => {
                       <img
                         src={shot.src}
                         alt={shot.alt}
+                        width="1206"
+                        height="2622"
                         className="w-full h-full object-cover object-top"
                         loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   </div>
@@ -216,9 +219,16 @@ const Motive = () => {
               className="text-2xl md:text-3xl font-bold text-stone-800 mb-3"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              Your motivation, always within reach.
+              A quiet moment, morning and evening.
             </p>
-            <p className="text-stone-400 text-sm">Available soon on iOS</p>
+            <a
+              href="https://apps.apple.com/us/app/motive/id6761436873"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-600 text-sm underline underline-offset-4 hover:text-amber-700"
+            >
+              Available on the App Store
+            </a>
           </div>
         </div>
 

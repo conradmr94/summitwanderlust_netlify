@@ -3,6 +3,63 @@
   publish = "dist"
 
 [[redirects]]
+  from = "/breathe-with-me"
+  to = "/breathe-mindful"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/breathe-with-me/privacy-policy"
+  to = "/breathe-mindful/privacy-policy"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/yammoing"
+  to = "https://yammoing.com/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/secret-student-society"
+  to = "https://secret-student-society--secretstudentsociety-f6eab.us-central1.hosted.app/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/deva"
+  to = "https://devseccode.com/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/404.html"
+  status = 404
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/gallery/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

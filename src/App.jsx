@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Link, Navigate, Routes, Route, useNavigate } from 'react-router-dom';
 import {
-  Compass, Mountain, Wind, Footprints, MapPin, Camera,
+  Compass, Mountain, Wind, Footprints, MapPin, Camera, Bell,
   ArrowDown, Menu, X, Play, Home, Volume2, Target, ChevronLeft, ChevronRight,
   ZoomIn, Heart, Layers, Sparkles, GraduationCap, Shield, Mic, Star,
   TreePine, Tent, ScanLine, Calculator, UtensilsCrossed, ShoppingCart,
@@ -16,6 +16,7 @@ import MotivePrivacyPolicy from './MotivePrivacyPolicy';
 import AngelWithYou from './AngelWithYou';
 import AngelWithYouPrivacy from './AngelWithYouPrivacy';
 import AngelWithYouTerms from './AngelWithYouTerms';
+import SeoManager from './SeoManager';
 
 // ── Pixel art hiker character — 4-frame walk cycle ─────────────────────────
 const PixelChar = ({ frame = 0 }) => {
@@ -86,6 +87,41 @@ const TRAIL_SEGS = [
 // Trail index for each app node (0 = start point)
 const NODE_IDX = { lovocado:1, breathe:2, yammoing:3, sss:4, deva:5, igottyou:6 };
 
+// Keep every camp addressable from summitwanderlust.com, even when the
+// product itself lives on a separate site. This also preserves links people
+// may have bookmarked before the game-style homepage was introduced.
+const ExternalCampRedirect = ({ href }) => {
+  useEffect(() => {
+    window.location.replace(href);
+  }, [href]);
+
+  return (
+    <main className="min-h-screen bg-stone-950 text-stone-200 flex items-center justify-center px-6">
+      <p className="font-mono text-sm tracking-widest uppercase">
+        Entering camp…{' '}
+        <a className="text-white underline" href={href}>continue</a>
+      </p>
+    </main>
+  );
+};
+
+const NotFound = () => (
+  <main className="min-h-screen bg-stone-950 text-stone-200 flex items-center justify-center px-6">
+    <div className="max-w-xl text-center">
+      <Mountain className="w-10 h-10 text-stone-500 mx-auto mb-6" aria-hidden="true" />
+      <p className="text-xs tracking-[0.3em] uppercase text-stone-500 mb-4">404 · Trail not found</p>
+      <h1 className="text-4xl md:text-5xl font-bold text-white mb-5" style={{ fontFamily: "'Playfair Display', serif" }}>
+        This path ends here.
+      </h1>
+      <p className="text-stone-400 mb-8">Return to basecamp to explore Summit Wanderlust apps, soundscapes, and spaces.</p>
+      <Link to="/" className="inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-6 py-3 text-white hover:bg-stone-700">
+        <Compass className="w-4 h-4" aria-hidden="true" />
+        Back to Summit Wanderlust
+      </Link>
+    </div>
+  </main>
+);
+
 const SummitWanderlustAdventure = () => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
@@ -128,12 +164,22 @@ const SummitWanderlustAdventure = () => {
   const [mapVisible, setMapVisible] = useState(false);
 
   const galleryImages = [
-    { id: 1, url: '/01.jpg' }, { id: 2, url: '/02.JPG' },
-    { id: 3, url: '/03.JPG' }, { id: 4, url: '/04.JPG' },
-    { id: 5, url: '/05.JPG' }, { id: 6, url: '/06.JPG' },
-    { id: 7, url: '/07.JPG' }, { id: 8, url: '/08.JPG' },
-    { id: 9, url: '/09.JPG' }, { id: 10, url: '/10.JPG' },
+    { id: 1, alt: 'Orange and violet sunset over the Pacific Ocean', width: 7728, height: 5152 },
+    { id: 2, alt: 'Snow-covered Sierra Nevada mountains reflected in a calm alpine lake', width: 7728, height: 5152 },
+    { id: 3, alt: 'Boats in Avalon Harbor beside the Catalina Casino on Santa Catalina Island', width: 7728, height: 5152 },
+    { id: 4, alt: 'A colorful parasail above the deep blue Pacific Ocean', width: 3015, height: 2010 },
+    { id: 5, alt: 'A hiker looking toward a snowy mountain above a frozen lake', width: 3024, height: 4032 },
+    { id: 6, alt: 'A frozen alpine lake and snowy mountain framed by pine trees', width: 4706, height: 6274 },
+    { id: 7, alt: 'Low clouds drifting through a Sierra Nevada pine forest', width: 7728, height: 5152 },
+    { id: 8, alt: 'Winter mountains and pine forest reflected in blue lake water', width: 7728, height: 5152 },
+    { id: 9, alt: 'Strawberry, California highway sign surrounded by forest', width: 7728, height: 5152 },
+    { id: 10, alt: 'Mossy rocks beneath a shaded evergreen forest canopy', width: 7728, height: 5152 },
   ];
+
+  const gallerySrc = (image, width = 1600) => `/gallery/${String(image.id).padStart(2, '0')}-${width}.avif`;
+  const gallerySrcSet = (image) => [480, 960, 1600]
+    .map((width) => `${gallerySrc(image, width)} ${width}w`)
+    .join(', ');
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -780,7 +826,8 @@ const SummitWanderlustAdventure = () => {
         { text: 'Pomodoro Focus Sessions', icon: Target },
         { text: 'Custom Background Sounds', icon: Volume2 },
       ],
-      cta: { label: 'Try It Now', action: () => navigate('/breathe-with-me'), style: 'bg-sky-800 hover:bg-sky-700 border-sky-600/50' },
+      campPath: '/breathe-mindful',
+      cta: { label: 'App Store', href: 'https://apps.apple.com/us/app/breathemindful/id6757343368', style: 'bg-sky-800 hover:bg-sky-700 border-sky-600/50' },
     },
     {
       id: 'yammoing',
@@ -800,6 +847,7 @@ const SummitWanderlustAdventure = () => {
         { text: 'Fridge & Pantry Recipes', icon: UtensilsCrossed },
         { text: 'Smart Shopping Lists', icon: ShoppingCart },
       ],
+      campPath: '/yammoing',
       cta: { label: 'App Store', href: 'https://apps.apple.com/us/app/yammoing/id6757343455', style: 'bg-gradient-to-r from-amber-700 to-emerald-700 hover:from-amber-600 hover:to-emerald-600 border-emerald-600/30' },
       ctaSecondary: { label: 'Website', href: 'https://yammoing.com/' },
     },
@@ -819,6 +867,7 @@ const SummitWanderlustAdventure = () => {
         { text: 'Community Feed & Social Posts', icon: Users },
         { text: 'Campus Events, Jobs & Groups', icon: MapPin },
       ],
+      campPath: '/secret-student-society',
       cta: { label: 'Visit Site', href: 'https://secret-student-society--secretstudentsociety-f6eab.us-central1.hosted.app/', style: 'bg-violet-800 hover:bg-violet-700 border-violet-600/50' },
     },
     {
@@ -837,6 +886,7 @@ const SummitWanderlustAdventure = () => {
         { text: 'Dependency Graph & Analysis', icon: Layers },
         { text: 'Voice-Enabled Chat Assistant', icon: Volume2 },
       ],
+      campPath: '/deva',
       cta: { label: 'Visit devseccode.com', href: 'https://devseccode.com', style: 'bg-zinc-700 hover:bg-zinc-600 border-zinc-500/50' },
     },
     {
@@ -855,6 +905,7 @@ const SummitWanderlustAdventure = () => {
         { text: 'Fake Call to Escape Situations', icon: Play },
         { text: 'Stealth Video Recording', icon: Camera },
       ],
+      campPath: '/angel-with-you',
       cta: { label: 'Learn More', action: () => navigate('/angel-with-you'), style: 'bg-gradient-to-r from-rose-800 to-purple-900 hover:from-rose-700 hover:to-purple-800 border-rose-600/30' },
     },
     {
@@ -873,7 +924,27 @@ const SummitWanderlustAdventure = () => {
         { text: 'Private Moments & Memories', icon: Camera },
         { text: 'Relationship Goals & Milestones', icon: Target },
       ],
-      cta: { label: 'Try it now', action: () => navigate('/lovocado'), style: 'bg-gradient-to-r from-pink-700 to-rose-700 hover:from-pink-600 hover:to-rose-600 border-pink-500/30' },
+      campPath: '/lovocado',
+      cta: { label: 'App Store', href: 'https://apps.apple.com/app/id6757644902', style: 'bg-gradient-to-r from-pink-700 to-rose-700 hover:from-pink-600 hover:to-rose-600 border-pink-500/30' },
+    },
+    {
+      id: 'motive',
+      name: 'motive.',
+      tagline: 'Daily motivation companion',
+      description: 'Curated morning and evening quotes, gentle reminders, ambient soundscapes, and day-and-night themes for quiet daily inspiration.',
+      gradient: 'from-amber-900 via-orange-950 to-stone-950',
+      iconBg: 'bg-amber-900/60 border-amber-700/40',
+      icon: Sparkles,
+      accentColor: 'text-amber-300',
+      glow: '245, 158, 11',
+      features: [
+        { text: 'Morning & Evening Quotes', icon: Sparkles },
+        { text: 'Ambient Soundscapes', icon: Volume2 },
+        { text: 'Personalized Reminders', icon: Bell },
+        { text: 'Day & Night Themes', icon: Star },
+      ],
+      campPath: '/motive',
+      cta: { label: 'App Store', href: 'https://apps.apple.com/us/app/motive/id6761436873', style: 'bg-gradient-to-r from-amber-700 to-orange-700 hover:from-amber-600 hover:to-orange-600 border-amber-500/30' },
     },
   ];
 
@@ -1006,6 +1077,8 @@ const SummitWanderlustAdventure = () => {
         onClick={() => setMenuOpen(!menuOpen)}
         className={`fixed top-5 right-5 z-50 bg-stone-900/90 backdrop-blur-sm p-3 rounded-full border border-stone-800 hover:border-stone-600 transition-all ${mapVisible ? 'hidden' : ''}`}
         aria-label="Menu"
+        aria-expanded={menuOpen}
+        aria-controls="site-navigation"
       >
         {menuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
       </button>
@@ -1019,7 +1092,7 @@ const SummitWanderlustAdventure = () => {
       {/* Dropdown Menu */}
       {menuOpen && (
         <div className="fixed top-16 right-5 z-40 bg-stone-900/98 backdrop-blur-xl rounded-2xl p-5 border border-stone-800 shadow-2xl min-w-[200px]">
-          <nav className="space-y-1">
+          <nav id="site-navigation" className="space-y-1" aria-label="Primary navigation">
             {[
               { label: 'Basecamp', id: 'chapter-0' },
               { label: 'Our Apps', id: 'chapter-1' },
@@ -1028,13 +1101,14 @@ const SummitWanderlustAdventure = () => {
               { label: 'Join Us', id: 'chapter-4' },
               { label: 'Gallery', id: 'chapter-5' },
             ].map(item => (
-              <button
+              <a
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
+                href={`#${item.id}`}
+                onClick={(event) => { event.preventDefault(); scrollToSection(item.id); }}
                 className="w-full text-left px-3 py-2 text-stone-300 hover:text-white hover:bg-stone-800/70 rounded-lg transition-all text-sm"
               >
                 {item.label}
-              </button>
+              </a>
             ))}
           </nav>
         </div>
@@ -1043,11 +1117,13 @@ const SummitWanderlustAdventure = () => {
       {/* Side Section Dots — hidden when game map HUD is visible */}
       <div className={`fixed left-4 top-1/2 -translate-y-1/2 z-30 flex-col gap-3 ${mapVisible ? 'hidden' : 'hidden lg:flex'}`}>
         {sections.map((s, i) => (
-          <button
+          <a
             key={s.id}
-            onClick={() => scrollToSection(s.id)}
+            href={`#${s.id}`}
+            onClick={(event) => { event.preventDefault(); scrollToSection(s.id); }}
             className="group flex items-center gap-2"
             title={s.label}
+            aria-label={`Go to ${s.label}`}
           >
             <div className={`rounded-full transition-all duration-300 ${
               activeSection === i ? 'w-6 h-2 bg-stone-300' : 'w-2 h-2 bg-stone-700 group-hover:bg-stone-500'
@@ -1055,20 +1131,21 @@ const SummitWanderlustAdventure = () => {
             <span className={`text-xs transition-all duration-200 ${
               activeSection === i ? 'text-stone-400 opacity-100' : 'opacity-0 group-hover:opacity-100 text-stone-500'
             }`}>{s.label}</span>
-          </button>
+          </a>
         ))}
       </div>
 
+      <main>
       {/* ───── HERO ───── */}
       <section id="chapter-0" className="min-h-screen relative flex items-center justify-center overflow-hidden">
         {/* Video background */}
         <video
           autoPlay loop muted playsInline preload="metadata"
-          poster="/01.jpg"
+          poster="/media/hero-poster.avif"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ opacity: 0.35 }}
         >
-          <source src="/01.mp4" type="video/mp4" />
+          <source src="/media/hero.mp4" type="video/mp4" />
         </video>
         {/* Dark overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-br from-stone-950/80 via-stone-900/70 to-stone-950/80" />
@@ -1099,30 +1176,31 @@ const SummitWanderlustAdventure = () => {
             className="text-6xl md:text-8xl font-bold mb-6 leading-none tracking-tight"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            <span className="word-reveal text-white block" style={{ animationDelay: '0.2s' }}>Building</span>
+            <span className="word-reveal text-white block" style={{ animationDelay: '0.2s' }}>Mindful apps</span>
             <span
               className="word-reveal block bg-gradient-to-r from-stone-300 via-white to-stone-300 bg-clip-text text-transparent"
               style={{ animationDelay: '0.38s' }}
             >
-              tools &amp; spaces
+              soundscapes &amp; spaces
             </span>
             <span className="word-reveal block text-stone-300 text-4xl md:text-5xl font-light" style={{ animationDelay: '0.56s' }}>
-              for mindful adventurers
+              for intentional living
             </span>
           </h1>
 
           <p className="word-reveal text-lg text-stone-300 mb-12 max-w-xl mx-auto leading-relaxed" style={{ animationDelay: '0.72s' }}>
-            Apps, retreats, and soundscapes designed for those who move with intention.
+            Lifestyle apps, nature soundscapes, and a Lake Tahoe retreat created by Summit Wanderlust, LLC.
           </p>
 
           <div className="word-reveal" style={{ animationDelay: '0.88s' }}>
-            <button
-              onClick={() => scrollToSection('chapter-1')}
+            <a
+              href="#chapter-1"
+              onClick={(event) => { event.preventDefault(); scrollToSection('chapter-1'); }}
               className="inline-flex items-center gap-3 bg-stone-800 hover:bg-stone-700 border border-stone-700 hover:border-stone-500 text-white px-8 py-4 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:scale-105"
             >
               Explore Our Work
               <ArrowDown className="w-4 h-4" />
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -1130,6 +1208,7 @@ const SummitWanderlustAdventure = () => {
       {/* ───── APPS TRAIL MAP ───── */}
       <section id="chapter-1" ref={mapSectionRef} className="relative py-16 px-6">
         <div className="max-w-6xl mx-auto">
+        <h2 className="sr-only">Mindful lifestyle apps by Summit Wanderlust</h2>
         <div
           id="apps-title"
           ref={el => observerRefs.current[0] = el}
@@ -1182,6 +1261,8 @@ const SummitWanderlustAdventure = () => {
             {/* Right: utility buttons */}
             <div style={{ flex:1, display:'flex', justifyContent:'flex-end', alignItems:'center', gap:8 }}>
               <button onClick={() => setShowQuestLog(s => !s)}
+                aria-expanded={showQuestLog}
+                aria-controls="quest-log"
                 style={{ fontFamily:'monospace', fontSize:'8px', fontWeight:'bold', letterSpacing:'0.14em', textTransform:'uppercase', color: showQuestLog ? '#000' : 'rgba(255,230,100,0.82)', background: showQuestLog ? 'rgba(255,220,60,0.95)' : 'rgba(255,255,255,0.05)', border:`1px solid ${showQuestLog ? 'rgba(255,220,60,1)' : 'rgba(255,220,60,0.28)'}`, padding:'5px 12px', cursor:'pointer', transition:'all 0.15s', whiteSpace:'nowrap' }}>
                 {showQuestLog ? '✕ Close' : '≡ Quest Log'}
               </button>
@@ -1190,7 +1271,7 @@ const SummitWanderlustAdventure = () => {
 
           {/* ── Quest Log panel ── */}
           {showQuestLog && (
-            <div className="absolute right-0 z-25 overflow-y-auto"
+            <div id="quest-log" className="absolute right-0 z-25 overflow-y-auto"
               style={{
                 top: 52, width: 230, height: 'calc(100% - 52px)',
                 background: 'rgba(4,3,1,0.96)',
@@ -1212,13 +1293,14 @@ const SummitWanderlustAdventure = () => {
 
               {/* App entries */}
               <div style={{ padding: '8px 0 80px' }}>
-                {apps.map((app, i) => {
+                {apps.filter((app) => mapNodes[app.id]).map((app) => {
                   const isVisited = visitedCamps.has(app.id);
                   const isSelected = mapSelectedApp?.id === app.id;
                   const I = app.icon;
                   return (
                     <button key={app.id}
                       onClick={() => { handleMapNodeClick(app.id); setShowQuestLog(false); }}
+                      aria-label={`Travel to ${app.name}`}
                       className="w-full flex items-start gap-3 text-left"
                       style={{
                         padding: '11px 16px',
@@ -1309,6 +1391,7 @@ const SummitWanderlustAdventure = () => {
               <button key={app.id} onClick={() => handleMapNodeClick(app.id)}
                 onMouseEnter={() => setHoveredNode(app.id)}
                 onMouseLeave={() => setHoveredNode(null)}
+                aria-label={`Explore ${app.name}`}
                 className="absolute z-20 flex flex-col items-center"
                 style={{ left:`${node.x}%`, top:`${node.y}%`, transform:'translate(-50%,-100%)', background:'none', border:'none', cursor: hikerWalking ? 'not-allowed' : 'pointer', padding:0, gap:0 }}
               >
@@ -1396,10 +1479,7 @@ const SummitWanderlustAdventure = () => {
           {mapSelectedApp && !hikerWalking && (() => {
             const app = mapSelectedApp;
             const I = app.icon;
-            const doEnter = () => {
-              if (app.cta.href) window.open(app.cta.href, '_blank', 'noopener noreferrer');
-              else if (app.cta.action) app.cta.action();
-            };
+            const doEnter = () => navigate(app.campPath);
             return (
               <div className="absolute bottom-0 left-0 right-0 z-40"
                 style={{
@@ -1531,6 +1611,7 @@ const SummitWanderlustAdventure = () => {
                             onClick={e => e.stopPropagation()}
                             className={`w-7 h-7 rounded-full flex items-center justify-center border text-xs transition-all duration-300 ${app.cta.style}`}
                             title={app.cta.label}
+                            aria-label={`${app.cta.label} for ${app.name}`}
                           >
                             <ArrowDown className="w-3 h-3 text-white" />
                           </a>
@@ -1558,6 +1639,7 @@ const SummitWanderlustAdventure = () => {
           <div className="flex items-center justify-center gap-3 mt-8">
             <button
               onClick={() => setRosterIdx(n => (n - 1 + apps.length) % apps.length)}
+              aria-label="Previous app"
               className="w-8 h-8 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center hover:bg-stone-700 transition-colors"
             >
               <ChevronLeft className="w-4 h-4 text-stone-300" />
@@ -1566,6 +1648,8 @@ const SummitWanderlustAdventure = () => {
               <button
                 key={app.id}
                 onClick={() => setRosterIdx(i)}
+                aria-label={`Show ${app.name}`}
+                aria-current={i === rosterIdx ? 'true' : undefined}
                 className="rounded-full transition-all duration-300"
                 style={{
                   width: i === rosterIdx ? 20 : 6,
@@ -1576,10 +1660,28 @@ const SummitWanderlustAdventure = () => {
             ))}
             <button
               onClick={() => setRosterIdx(n => (n + 1) % apps.length)}
+              aria-label="Next app"
               className="w-8 h-8 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center hover:bg-stone-700 transition-colors"
             >
               <ChevronRight className="w-4 h-4 text-stone-300" />
             </button>
+          </div>
+
+          <div className="max-w-5xl mx-auto mt-12 px-6">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.22em] text-stone-500 mb-5 text-center">Explore every app</h3>
+            <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {apps.map((app) => (
+                <li key={`portfolio-${app.id}`} className="rounded-xl border border-stone-800 bg-stone-900/50 p-4">
+                  <a href={app.campPath} className="text-white font-semibold hover:text-stone-300">{app.name}</a>
+                  <p className="text-stone-500 text-xs mt-1 leading-relaxed">{app.tagline}</p>
+                  {app.cta.href && (
+                    <a href={app.cta.href} target="_blank" rel="noopener noreferrer" className="inline-block text-stone-400 hover:text-white text-xs mt-3 underline underline-offset-4">
+                      {app.cta.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -1606,7 +1708,7 @@ const SummitWanderlustAdventure = () => {
                 { icon: Mountain, label: 'Summit Views', sub: '6,225 ft elevation' },
                 { icon: TreePine, label: 'Private Forest', sub: 'Old-growth pine' },
                 { icon: Tent, label: 'Fire Pit', sub: 'Cedar-wood nights' },
-                { icon: Star, label: 'Stargazing Deck', sub: 'Dark sky certified' },
+                { icon: Star, label: 'Stargazing Deck', sub: 'Star-filled Sierra nights' },
               ].map(({ icon: Icon, label, sub }) => (
                 <div key={label} className="bg-stone-900/60 border border-stone-800 rounded-2xl p-5 flex flex-col gap-3 hover:border-stone-600 transition-colors">
                   <Icon className="w-7 h-7 text-amber-500/70" />
@@ -1639,11 +1741,11 @@ const SummitWanderlustAdventure = () => {
               </div>
 
               <p className="text-stone-500 text-sm leading-relaxed mb-6">
-                We&apos;re building this retreat right now. Every detail crafted for the mindful adventurer — opening our doors in Spring 2027.
+                We&apos;re building this retreat right now, with an opening target of Spring 2027. Project status last updated August 2026.
               </p>
 
               <div className="w-full py-3 rounded-xl text-sm font-medium text-amber-300/80 bg-amber-950/40 border border-amber-800/30 text-center tracking-wide">
-                Opening Spring 2027
+                Target opening: <time dateTime="2027-03">Spring 2027</time>
               </div>
             </div>
           </div>
@@ -1740,15 +1842,15 @@ const SummitWanderlustAdventure = () => {
             Your Adventure Awaits
           </h2>
           <p className="text-stone-400 text-lg leading-relaxed mb-16">
-            Join thousands of wanderers who&apos;ve discovered that the summit isn&apos;t a destination—it&apos;s a way of being.
+            Explore a growing portfolio of apps, soundscapes, and restorative spaces designed for intentional living.
             Where will your path lead today?
           </p>
 
           <div className="grid grid-cols-3 gap-4 mb-16">
             {[
-              { n: '6+', label: 'Apps Built' },
-              { n: '10K+', label: 'Users' },
-              { n: '∞', label: 'Adventures' },
+              { n: '7', label: 'Apps & Projects' },
+              { n: '3', label: 'Nature Soundscapes' },
+              { n: '2027', label: 'Lodge Target' },
             ].map(({ n, label }) => (
               <div key={label} className="bg-stone-900/60 border border-stone-800 rounded-2xl p-6">
                 <p className="text-3xl font-bold text-white mb-1">{n}</p>
@@ -1757,13 +1859,14 @@ const SummitWanderlustAdventure = () => {
             ))}
           </div>
 
-          <button
-            onClick={() => scrollToSection('chapter-0')}
+          <a
+            href="#chapter-0"
+            onClick={(event) => { event.preventDefault(); scrollToSection('chapter-0'); }}
             className="inline-flex items-center gap-3 bg-stone-800 hover:bg-stone-700 border border-stone-700 hover:border-stone-500 text-white px-10 py-4 rounded-full font-medium tracking-wide transition-all duration-300"
           >
             <Compass className="w-5 h-5" />
             Start Your Journey
-          </button>
+          </a>
         </div>
       </section>
 
@@ -1794,8 +1897,14 @@ const SummitWanderlustAdventure = () => {
               <div className="relative h-[500px] bg-stone-900">
                 {/* Only render current image */}
                 <img
-                  src={galleryImages[galleryIndex].url}
-                  alt={`Photo ${galleryIndex + 1}`}
+                  src={gallerySrc(galleryImages[galleryIndex])}
+                  srcSet={gallerySrcSet(galleryImages[galleryIndex])}
+                  sizes="(min-width: 1152px) 1152px, 100vw"
+                  alt={galleryImages[galleryIndex].alt}
+                  width={galleryImages[galleryIndex].width}
+                  height={galleryImages[galleryIndex].height}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-opacity duration-500"
                   style={{ opacity: isGalleryAnimating ? 0.5 : 1 }}
                 />
@@ -1808,6 +1917,7 @@ const SummitWanderlustAdventure = () => {
                 <button
                   onClick={prevGallerySlide}
                   disabled={galleryIndex === 0}
+                  aria-label="Previous gallery photo"
                   className="absolute left-3 top-1/2 -translate-y-1/2 bg-stone-900/70 backdrop-blur-sm hover:bg-stone-800/90 p-3 rounded-full border border-stone-700/50 transition-all disabled:opacity-30"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
@@ -1815,6 +1925,7 @@ const SummitWanderlustAdventure = () => {
                 <button
                   onClick={nextGallerySlide}
                   disabled={galleryIndex === galleryImages.length - 1}
+                  aria-label="Next gallery photo"
                   className="absolute right-3 top-1/2 -translate-y-1/2 bg-stone-900/70 backdrop-blur-sm hover:bg-stone-800/90 p-3 rounded-full border border-stone-700/50 transition-all disabled:opacity-30"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
@@ -1825,6 +1936,8 @@ const SummitWanderlustAdventure = () => {
                     <button
                       key={i}
                       onClick={() => goToGallerySlide(i)}
+                      aria-label={`Show gallery photo ${i + 1}`}
+                      aria-current={galleryIndex === i ? 'true' : undefined}
                       className={`rounded-full transition-all duration-300 ${
                         galleryIndex === i ? 'w-6 h-2 bg-stone-200' : 'w-2 h-2 bg-stone-600 hover:bg-stone-400'
                       }`}
@@ -1843,8 +1956,10 @@ const SummitWanderlustAdventure = () => {
           >
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {galleryImages.map((image, index) => (
-                <div
+                <button
                   key={image.id}
+                  type="button"
+                  aria-label={`Open ${image.alt}`}
                   className="relative group cursor-pointer overflow-hidden rounded-xl aspect-square bg-stone-900"
                   onClick={() => {
                     setSelectedGalleryImage(image);
@@ -1853,20 +1968,26 @@ const SummitWanderlustAdventure = () => {
                   }}
                 >
                   <img
-                    src={image.url}
-                    alt={`Photo ${index + 1}`}
+                    src={gallerySrc(image, 480)}
+                    srcSet={gallerySrcSet(image)}
+                    sizes="(min-width: 1024px) 224px, (min-width: 768px) 33vw, 50vw"
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
                     loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <ZoomIn className="w-7 h-7 text-white" />
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
         </div>
       </section>
+      </main>
 
       {/* ───── FOOTER ───── */}
       <footer className="py-16 px-6 border-t border-stone-900">
@@ -1891,9 +2012,9 @@ const SummitWanderlustAdventure = () => {
                   { l: 'Mountain Lodge', id: 'chapter-2' },
                   { l: 'Nature Sounds', id: 'chapter-3' },
                 ].map(item => (
-                  <button key={item.id} onClick={() => scrollToSection(item.id)} className="block hover:text-stone-300 transition-colors">
+                  <a key={item.id} href={`#${item.id}`} onClick={(event) => { event.preventDefault(); scrollToSection(item.id); }} className="block hover:text-stone-300 transition-colors">
                     {item.l}
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
@@ -1909,7 +2030,7 @@ const SummitWanderlustAdventure = () => {
           </div>
 
           <div className="pt-8 border-t border-stone-900 flex items-center justify-between text-stone-600 text-xs">
-            <span>© 2025 Summit Wanderlust</span>
+            <span>© 2026 Summit Wanderlust, LLC</span>
             <span>Leave only footprints, take only memories</span>
           </div>
         </div>
@@ -1918,6 +2039,7 @@ const SummitWanderlustAdventure = () => {
       {/* Scroll to Top */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Scroll to top"
         className={`fixed bottom-6 right-6 bg-stone-900/90 backdrop-blur-sm p-3 rounded-full border border-stone-800 hover:border-stone-600 transition-all duration-300 ${
           scrollY > 500 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
@@ -1934,6 +2056,7 @@ const SummitWanderlustAdventure = () => {
         <div className="fixed inset-0 bg-black/95 z-[200] flex items-center justify-center p-4">
           <button
             onClick={() => setIsGalleryFullscreen(false)}
+            aria-label="Close gallery"
             className="absolute top-4 right-4 bg-stone-800/80 hover:bg-stone-700 p-3 rounded-full border border-stone-700 transition-all"
           >
             <X className="w-5 h-5 text-white" />
@@ -1941,20 +2064,26 @@ const SummitWanderlustAdventure = () => {
 
           <div className="max-w-5xl max-h-[90vh] relative">
             <img
-              src={galleryImages[galleryIndex].url}
-              alt={`Photo ${galleryIndex + 1}`}
+              src={gallerySrc(galleryImages[galleryIndex])}
+              srcSet={gallerySrcSet(galleryImages[galleryIndex])}
+              sizes="90vw"
+              alt={galleryImages[galleryIndex].alt}
+              width={galleryImages[galleryIndex].width}
+              height={galleryImages[galleryIndex].height}
               className="max-w-full max-h-[90vh] object-contain rounded-lg"
             />
           </div>
 
           <button
             onClick={prevGallerySlide}
+            aria-label="Previous gallery photo"
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-stone-800/80 hover:bg-stone-700 p-4 rounded-full border border-stone-700 transition-all"
           >
             <ChevronLeft className="w-6 h-6 text-white" />
           </button>
           <button
             onClick={nextGallerySlide}
+            aria-label="Next gallery photo"
             className="absolute right-4 top-1/2 -translate-y-1/2 bg-stone-800/80 hover:bg-stone-700 p-4 rounded-full border border-stone-700 transition-all"
           >
             <ChevronRight className="w-6 h-6 text-white" />
@@ -1967,18 +2096,27 @@ const SummitWanderlustAdventure = () => {
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<SummitWanderlustAdventure />} />
-      <Route path="/breathe-with-me" element={<BreathWithMe />} />
-      <Route path="/breathe-with-me/privacy-policy" element={<PrivacyPolicy />} />
-      <Route path="/lovocado" element={<Lovocado />} />
-      <Route path="/lovocado/privacy-policy" element={<LovocadoPrivacyPolicy />} />
-      <Route path="/motive" element={<Motive />} />
-      <Route path="/motive/privacy-policy" element={<MotivePrivacyPolicy />} />
-      <Route path="/angel-with-you" element={<AngelWithYou />} />
-      <Route path="/angel-with-you/privacy" element={<AngelWithYouPrivacy />} />
-      <Route path="/angel-with-you/terms" element={<AngelWithYouTerms />} />
-    </Routes>
+    <>
+      <SeoManager />
+      <Routes>
+        <Route path="/" element={<SummitWanderlustAdventure />} />
+        <Route path="/breathe-mindful" element={<BreathWithMe />} />
+        <Route path="/breathe-with-me" element={<Navigate to="/breathe-mindful" replace />} />
+        <Route path="/breathe-mindful/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/breathe-with-me/privacy-policy" element={<Navigate to="/breathe-mindful/privacy-policy" replace />} />
+        <Route path="/yammoing" element={<ExternalCampRedirect href="https://yammoing.com/" />} />
+        <Route path="/secret-student-society" element={<ExternalCampRedirect href="https://secret-student-society--secretstudentsociety-f6eab.us-central1.hosted.app/" />} />
+        <Route path="/deva" element={<ExternalCampRedirect href="https://devseccode.com/" />} />
+        <Route path="/lovocado" element={<Lovocado />} />
+        <Route path="/lovocado/privacy-policy" element={<LovocadoPrivacyPolicy />} />
+        <Route path="/motive" element={<Motive />} />
+        <Route path="/motive/privacy-policy" element={<MotivePrivacyPolicy />} />
+        <Route path="/angel-with-you" element={<AngelWithYou />} />
+        <Route path="/angel-with-you/privacy" element={<AngelWithYouPrivacy />} />
+        <Route path="/angel-with-you/terms" element={<AngelWithYouTerms />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 };
 
