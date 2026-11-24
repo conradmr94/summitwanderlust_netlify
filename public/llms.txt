@@ -13,6 +13,7 @@
 - [Lovocado](https://summitwanderlust.com/lovocado): A private couples app for shared moments, schedules, date ideas, relationship goals, and memories.
 - [motive.](https://summitwanderlust.com/motive): Curated morning and evening quotes, reminders, ambient soundscapes, and day-and-night themes.
 - [Angel With You](https://summitwanderlust.com/angel-with-you): A personal safety companion with voice triggers, back-tap actions, fake calls, recording, and emergency alerts.
+- [My Little Chef](https://summitwanderlust.com/my-little-chef): A recipe app with step-by-step cook mode, spoken steps, timers, recipe sharing, and optional Yammoing linking.
 - [Yammoing](https://yammoing.com/): An AI nutrition companion.
 - [Secret Student Society](https://secret-student-society--secretstudentsociety-f6eab.us-central1.hosted.app/): A verified university community hub.
 - [Deva](https://devseccode.com/): A security-first development environment.
@@ -23,6 +24,8 @@
 - [Lovocado privacy](https://summitwanderlust.com/lovocado/privacy-policy)
 - [motive. privacy](https://summitwanderlust.com/motive/privacy-policy)
 - [Angel With You privacy](https://summitwanderlust.com/angel-with-you/privacy)
+- [My Little Chef privacy](https://summitwanderlust.com/my-little-chef/privacy)
+- [My Little Chef terms](https://summitwanderlust.com/my-little-chef/terms)
 - [Angel With You terms](https://summitwanderlust.com/angel-with-you/terms)
 
 ## Citation guidance

@@ -16,6 +16,8 @@ import MotivePrivacyPolicy from './MotivePrivacyPolicy';
 import AngelWithYou from './AngelWithYou';
 import AngelWithYouPrivacy from './AngelWithYouPrivacy';
 import AngelWithYouTerms from './AngelWithYouTerms';
+import MyLittleChef from './MyLittleChef';
+import MyLittleChefDoc from './MyLittleChefDoc';
 import SeoManager from './SeoManager';
 
 // ── Pixel art hiker character — 4-frame walk cycle ─────────────────────────
@@ -2114,6 +2116,10 @@ const App = () => {
         <Route path="/angel-with-you" element={<AngelWithYou />} />
         <Route path="/angel-with-you/privacy" element={<AngelWithYouPrivacy />} />
         <Route path="/angel-with-you/terms" element={<AngelWithYouTerms />} />
+        <Route path="/my-little-chef" element={<MyLittleChef />} />
+        <Route path="/my-little-chef/privacy" element={<MyLittleChefDoc doc="privacy" />} />
+        <Route path="/my-little-chef/terms" element={<MyLittleChefDoc doc="terms" />} />
+        <Route path="/my-little-chef/support" element={<MyLittleChefDoc doc="support" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

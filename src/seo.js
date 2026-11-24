@@ -11,6 +11,12 @@ export const products = [
     downloadUrl: 'https://apps.apple.com/us/app/breathemindful/id6757343368',
   },
   {
+    name: 'My Little Chef',
+    path: '/my-little-chef',
+    description: 'A recipe app with step-by-step cook mode, spoken steps, timers, recipe sharing, and optional Yammoing linking.',
+    category: 'LifestyleApplication',
+  },
+  {
     name: 'Yammoing',
     path: '/yammoing',
     description: 'An AI nutrition companion for food analysis, calorie tracking, recipes, restaurants, shopping lists, and air-quality awareness.',
@@ -143,6 +149,26 @@ export const SEO_ROUTES = {
     'Angel With You | Personal Safety Companion App',
     'Explore voice-triggered alerts, back-tap actions, fake calls, stealth recording, and other personal safety tools in Angel With You.',
     { path: '/angel-with-you', schema: appSchema('Angel With You') },
+  ),
+  '/my-little-chef': route(
+    'My Little Chef | Recipes & Guided Cooking for iPhone',
+    'Find a recipe, cook it one step at a time with spoken steps and timers, and share your own with My Little Chef for iPhone.',
+    { path: '/my-little-chef', schema: appSchema('My Little Chef') },
+  ),
+  '/my-little-chef/privacy': route(
+    'My Little Chef Privacy Policy | Summit Wanderlust',
+    'Read how My Little Chef handles account data, posted recipes, photos, and Yammoing linking.',
+    { path: '/my-little-chef/privacy', robots: noindex },
+  ),
+  '/my-little-chef/terms': route(
+    'My Little Chef Terms of Service | Summit Wanderlust',
+    'Read the terms of service for My Little Chef.',
+    { path: '/my-little-chef/terms', robots: noindex },
+  ),
+  '/my-little-chef/support': route(
+    'My Little Chef Support | Summit Wanderlust',
+    'Get help with My Little Chef, report content, or delete your account.',
+    { path: '/my-little-chef/support' },
   ),
   '/breathe-mindful/privacy-policy': route(
     'BreatheMindful Privacy Policy | Summit Wanderlust',
