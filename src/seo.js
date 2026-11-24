@@ -127,7 +127,7 @@ const noindex = 'noindex,follow';
 export const SEO_ROUTES = {
   '/': route(
     'Summit Wanderlust | Mindful Lifestyle Apps & Lake Tahoe Retreat',
-    'Explore mindful lifestyle apps from Summit Wanderlust, LLC, including BreatheMindful, Lovocado, and motive., plus nature soundscapes and a Lake Tahoe retreat.',
+    'Explore mindful lifestyle apps from Summit Wanderlust, LLC, including BreatheMindful, My Little Chef, Lovocado, and motive., plus nature soundscapes and a Lake Tahoe retreat.',
     { path: '/', schema: [organizationSchema, websiteSchema, portfolioSchema] },
   ),
   '/breathe-mindful': route(
