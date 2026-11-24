@@ -5,7 +5,7 @@ import {
   ArrowDown, Menu, X, Play, Home, Volume2, Target, ChevronLeft, ChevronRight,
   ZoomIn, Heart, Layers, Sparkles, GraduationCap, Shield, Mic, Star,
   TreePine, Tent, ScanLine, Calculator, UtensilsCrossed, ShoppingCart,
-  Grid, Users, Zap
+  Grid, Users, Zap, ChefHat
 } from 'lucide-react';
 import BreathWithMe from './BreathWithMe';
 import PrivacyPolicy from './PrivacyPolicy';
@@ -16,6 +16,8 @@ import MotivePrivacyPolicy from './MotivePrivacyPolicy';
 import AngelWithYou from './AngelWithYou';
 import AngelWithYouPrivacy from './AngelWithYouPrivacy';
 import AngelWithYouTerms from './AngelWithYouTerms';
+import MyLittleChef from './MyLittleChef';
+import MyLittleChefDoc from './MyLittleChefDoc';
 import SeoManager from './SeoManager';
 
 // ── Pixel art hiker character — 4-frame walk cycle ─────────────────────────
@@ -83,9 +85,10 @@ const TRAIL_SEGS = [
   [ 96, 45,110, 38,128, 28,144, 24],  // 3: yammoing → sss
   [144, 24,160, 22,178, 28,187, 45],  // 4: sss → deva
   [187, 45,196, 60,188, 76,158, 87],  // 5: deva → igottyou
+  [158, 87,150, 99,136,102,122, 94],  // 6: igottyou → littlechef
 ];
 // Trail index for each app node (0 = start point)
-const NODE_IDX = { lovocado:1, breathe:2, yammoing:3, sss:4, deva:5, igottyou:6 };
+const NODE_IDX = { lovocado:1, breathe:2, yammoing:3, sss:4, deva:5, igottyou:6, littlechef:7 };
 
 // Keep every camp addressable from summitwanderlust.com, even when the
 // product itself lives on a separate site. This also preserves links people
@@ -514,6 +517,7 @@ const SummitWanderlustAdventure = () => {
       ctx.bezierCurveTo(110,38,128,28,144,24);
       ctx.bezierCurveTo(160,22,178,28,187,45);
       ctx.bezierCurveTo(196,60,188,76,158,87);
+      ctx.bezierCurveTo(150,99,136,102,122,94);
     };
     ctx.lineCap='round'; ctx.lineJoin='round';
     // Path channel — subtle groove under trail
@@ -526,7 +530,7 @@ const SummitWanderlustAdventure = () => {
     const bzP=(t,ax,ay,bx,by,cx,cy,dx,dy)=>{const m=1-t;return[m*m*m*ax+3*m*m*t*bx+3*m*t*t*cx+t*t*t*dx,m*m*m*ay+3*m*m*t*by+3*m*t*t*cy+t*t*t*dy];};
     ctx.fillStyle='rgba(46,24,4,0.22)';
     [[115,126,98,124,82,119,67,111],[67,111,55,103,40,90,48,75],[48,75,54,62,76,50,96,45],
-     [96,45,110,38,128,28,144,24],[144,24,160,22,178,28,187,45],[187,45,196,60,188,76,158,87]
+     [96,45,110,38,128,28,144,24],[144,24,160,22,178,28,187,45],[187,45,196,60,188,76,158,87],[158,87,150,99,136,102,122,94]
     ].forEach(([ax,ay,bx,by,cx,cy,dx,dy])=>{
       for(let i=0;i<8;i++){
         const [px,py]=bzP((i+0.5)/8,ax,ay,bx,by,cx,cy,dx,dy);
@@ -609,6 +613,7 @@ const SummitWanderlustAdventure = () => {
     cs(144,28, 9, 2.5);   // sss base (smaller — 0.68 scale)
     cs(187,52, 17,4.5);   // deva base
     cs(162,91, 13,3.5);   // igottyou base
+    cs(122,96, 13,3.5);   // littlechef base
 
     // ── Landmark buildings (strong silhouettes — squint test: one second ID) ──
 
@@ -759,6 +764,26 @@ const SummitWanderlustAdventure = () => {
       ctx.fillStyle='#ffd020'; ctx.fillRect(159,82,2,2); ctx.fillRect(161,81,1,2); // bright tip
     }, 0.78);
 
+    // My Little Chef: white cook house with a big chef's hat for a roof + smoking chimney
+    lm(122,88,()=>{
+      ctx.translate(6,6); // drawn around (116,82)
+      // Hat puff (three lobes) and band
+      ctx.fillStyle='#f6f0e2'; ctx.fillRect(107,70,18,5); ctx.fillRect(109,68,5,2); ctx.fillRect(114,67,5,3); ctx.fillRect(119,68,4,2);
+      ctx.fillStyle='#ffffff'; ctx.fillRect(108,70,4,3); ctx.fillRect(110,68,2,1); ctx.fillRect(115,67,2,1);
+      ctx.fillStyle='#d2c8b2'; ctx.fillRect(121,71,4,4); ctx.fillRect(113,72,1,3); ctx.fillRect(118,72,1,3);
+      ctx.fillStyle='#f0a820'; ctx.fillRect(108,75,16,2); ctx.fillStyle='#c07c10'; ctx.fillRect(118,75,6,2);
+      // Walls
+      ctx.fillStyle='#f4e4c0'; ctx.fillRect(108,77,16,11);
+      ctx.fillStyle='#cdb88c'; ctx.fillRect(118,77,6,11);
+      // Door and serving window
+      ctx.fillStyle='#7a4420'; ctx.fillRect(110,81,4,7); ctx.fillStyle='#9c6030'; ctx.fillRect(110,81,1,7);
+      ctx.fillStyle='#ffcf58'; ctx.fillRect(116,80,6,4); ctx.fillStyle='#fff0b0'; ctx.fillRect(116,80,2,1);
+      ctx.fillStyle='#b06a28'; ctx.fillRect(115,84,8,1);
+      // Chimney and smoke
+      ctx.fillStyle='#8a4a34'; ctx.fillRect(126,74,3,14); ctx.fillStyle='#a86048'; ctx.fillRect(126,74,1,14);
+      ctx.fillStyle='rgba(240,240,240,0.55)'; ctx.fillRect(127,70,3,2); ctx.fillRect(129,67,3,2);
+    }, 0.82);
+
     // ── 14b. DIRECTIONAL LIGHT (upper-left source — unifies scene, kills flat-lit look) ──
     const dlight=ctx.createLinearGradient(0,0,W*0.7,H);
     dlight.addColorStop(0,'rgba(255,248,220,0.04)');    // warm light upper-left
@@ -828,6 +853,25 @@ const SummitWanderlustAdventure = () => {
       ],
       campPath: '/breathe-mindful',
       cta: { label: 'App Store', href: 'https://apps.apple.com/us/app/breathemindful/id6757343368', style: 'bg-sky-800 hover:bg-sky-700 border-sky-600/50' },
+    },
+    {
+      id: 'littlechef',
+      name: 'My Little Chef',
+      tagline: 'Guided cooking companion',
+      description: 'Find a recipe, cook it one step at a time with spoken steps and timers, and share your own. Links with Yammoing for shopping lists and meals.',
+      gradient: 'from-yellow-800 via-amber-950 to-stone-950',
+      iconBg: 'bg-yellow-900/60 border-yellow-700/40',
+      icon: ChefHat,
+      accentColor: 'text-yellow-300',
+      glow: '250, 204, 21',
+      features: [
+        { text: 'Step-by-Step Cook Mode', icon: ChefHat },
+        { text: 'Spoken Steps & Timers', icon: Volume2 },
+        { text: 'Recipes by Mood or Ingredient', icon: UtensilsCrossed },
+        { text: 'Works with Yammoing', icon: ShoppingCart },
+      ],
+      campPath: '/my-little-chef',
+      cta: { label: 'Learn More', action: () => navigate('/my-little-chef'), style: 'bg-gradient-to-r from-yellow-700 to-amber-700 hover:from-yellow-600 hover:to-amber-600 border-yellow-600/30' },
     },
     {
       id: 'yammoing',
@@ -956,7 +1000,9 @@ const SummitWanderlustAdventure = () => {
     sss:      { x: 60, y: 16 },  // summit peak
     deva:     { x: 78, y: 30 },  // fortress ridge
     igottyou: { x: 66, y: 58 },  // base camp
+    littlechef: { x: 50.8, y: 62.7 },  // center meadow
   };
+  const campCount = Object.keys(mapNodes).length;
 
   const handleMapNodeClick = (appId) => {
     if (hikerWalking) return;
@@ -1283,17 +1329,17 @@ const SummitWanderlustAdventure = () => {
               <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                 <p style={{ fontFamily:'monospace', fontSize:'7px', letterSpacing:'0.3em', textTransform:'uppercase', color:'rgba(255,220,60,0.55)', marginBottom:4 }}>Chapter II</p>
                 <p style={{ fontFamily:'monospace', fontSize:'13px', fontWeight:'bold', letterSpacing:'0.06em', textTransform:'uppercase', color:'#fff' }}>Quest Log</p>
-                <p style={{ fontFamily:'monospace', fontSize:'8px', color:'rgba(255,255,255,0.3)', marginTop:3 }}>{visitedCamps.size}/6 camps discovered</p>
+                <p style={{ fontFamily:'monospace', fontSize:'8px', color:'rgba(255,255,255,0.3)', marginTop:3 }}>{visitedCamps.size}/{campCount} camps discovered</p>
               </div>
 
               {/* Progress bar */}
               <div style={{ margin:'0 16px', height:3, background:'rgba(255,255,255,0.08)', borderRadius:2 }}>
-                <div style={{ height:'100%', width:`${(visitedCamps.size/6)*100}%`, background:'rgba(255,220,60,0.7)', borderRadius:2, transition:'width 0.4s' }}/>
+                <div style={{ height:'100%', width:`${(visitedCamps.size/campCount)*100}%`, background:'rgba(255,220,60,0.7)', borderRadius:2, transition:'width 0.4s' }}/>
               </div>
 
               {/* App entries */}
               <div style={{ padding: '8px 0 80px' }}>
-                {apps.filter((app) => mapNodes[app.id]).map((app) => {
+                {apps.filter((app) => mapNodes[app.id]).map((app, i) => {
                   const isVisited = visitedCamps.has(app.id);
                   const isSelected = mapSelectedApp?.id === app.id;
                   const I = app.icon;
@@ -1505,7 +1551,7 @@ const SummitWanderlustAdventure = () => {
                         style={{ fontFamily:'monospace', fontSize:'9px', fontWeight:'bold', textTransform:'uppercase', letterSpacing:'0.14em', color:'#000', background:`rgb(${app.glow})`, padding:'8px 20px', border:'none', cursor:'pointer', whiteSpace:'nowrap', boxShadow:`0 0 12px rgba(${app.glow},0.45)` }}>
                         Enter Camp →
                       </button>
-                      <p style={{ fontFamily:'monospace', fontSize:'7px', color:'rgba(255,255,255,0.2)', letterSpacing:'0.12em', textAlign:'right' }}>{visitedCamps.size}/6 visited</p>
+                      <p style={{ fontFamily:'monospace', fontSize:'7px', color:'rgba(255,255,255,0.2)', letterSpacing:'0.12em', textAlign:'right' }}>{visitedCamps.size}/{campCount} visited</p>
                     </div>
                     <button onClick={() => setMapSelectedApp(null)}
                       style={{ color:'rgba(255,255,255,0.22)', background:'none', border:'1px solid rgba(255,255,255,0.08)', padding:'5px 8px', cursor:'pointer', fontFamily:'monospace', fontSize:'10px', lineHeight:1, flexShrink:0 }}>
@@ -1525,13 +1571,13 @@ const SummitWanderlustAdventure = () => {
                 <div style={{ width:7, height:7, borderRadius:'50%', background:`rgb(${travelingTo.glow})`, animation:'beaconPulse 0.9s ease-in-out infinite', marginRight:10, flexShrink:0 }}/>
                 <span style={{ fontFamily:'monospace', fontSize:'8px', letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.3)', marginRight:6 }}>Traveling to</span>
                 <span style={{ fontFamily:'monospace', fontSize:'10px', fontWeight:'bold', letterSpacing:'0.1em', textTransform:'uppercase', color:`rgba(${travelingTo.glow},0.9)` }}>{travelingTo.name}</span>
-                <span style={{ fontFamily:'monospace', fontSize:'8px', color:'rgba(255,255,255,0.18)', marginLeft:'auto', letterSpacing:'0.12em' }}>{visitedCamps.size}/6 visited</span>
+                <span style={{ fontFamily:'monospace', fontSize:'8px', color:'rgba(255,255,255,0.18)', marginLeft:'auto', letterSpacing:'0.12em' }}>{visitedCamps.size}/{campCount} visited</span>
               </>) : (<>
                 <span style={{ fontFamily:'monospace', fontSize:'10px', color:'rgba(255,255,255,0.45)', letterSpacing:'0.07em' }}>
                   ▲  Click a camp to explore
                 </span>
                 {visitedCamps.size > 0 && (
-                  <span style={{ marginLeft:'auto', fontFamily:'monospace', fontSize:'9px', color:'rgba(255,255,255,0.3)', letterSpacing:'0.14em' }}>{visitedCamps.size}/6 camps visited</span>
+                  <span style={{ marginLeft:'auto', fontFamily:'monospace', fontSize:'9px', color:'rgba(255,255,255,0.3)', letterSpacing:'0.14em' }}>{visitedCamps.size}/{campCount} camps visited</span>
                 )}
               </>)}
             </div>
@@ -2114,6 +2160,10 @@ const App = () => {
         <Route path="/angel-with-you" element={<AngelWithYou />} />
         <Route path="/angel-with-you/privacy" element={<AngelWithYouPrivacy />} />
         <Route path="/angel-with-you/terms" element={<AngelWithYouTerms />} />
+        <Route path="/my-little-chef" element={<MyLittleChef />} />
+        <Route path="/my-little-chef/privacy" element={<MyLittleChefDoc doc="privacy" />} />
+        <Route path="/my-little-chef/terms" element={<MyLittleChefDoc doc="terms" />} />
+        <Route path="/my-little-chef/support" element={<MyLittleChefDoc doc="support" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
